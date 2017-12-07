@@ -728,6 +728,42 @@ div.gdiItemsContainer {
    margin-right: 7px;
 }
 
+table.compareTable td {
+  padding: 0.25em;
+  text-align: center;
+}
+
+table.compareTable th {
+  font-family: 'Zeroes Three', 'Muli', Verdana, Arial, sans-serif;
+  white-space: nowrap;
+  background: #222;
+}
+
+table.compareTable th span.sort-indicator {
+}
+
+
+table.compareTable td h4, table.compareTable td h5 {
+  margin: 0;
+}
+
+table.compareTable td .thumb {
+  margin: auto;
+}
+
+table.compareTable div.ic {
+  float: left;
+  margin-right:4px;
+}
+
+table.compareTable.noWrapHeaders th {
+  white-space: nowrap;
+}
+
+table.compareTable .noWrap, table.compareTable .wfcFiringCycle {
+  white-space: nowrap;
+}
+
 @media only screen and (min-width: 1479px) {
     .filters.gdi {
         left: 0;

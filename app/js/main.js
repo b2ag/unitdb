@@ -2,7 +2,7 @@
 
 var unitDb = (function() {
     var init = function(appName, payload) {
-            var app = angular.module(appName, ['ngRoute', 'ngSanitize', 'angular-underscore']);
+            var app = angular.module(appName, ['ngRoute', 'ngSanitize', 'angular-underscore', 'ngTable']);
 
             // routing
             app.config(['$routeProvider', function($routeProvider) {
@@ -42,7 +42,7 @@ var unitDb = (function() {
 
             // hash-bang introduced in AngularJS 1.6 already deprecated
             // https://webmasters.googleblog.com/2015/10/deprecating-our-ajax-crawling-scheme.html
-            app.config(['$locationProvider', function($locationProvider) { $locationProvider.hashPrefix(""); }]);
+            app.config(['$locationProvider', function($locationProvider) { $locationProvider.hashPrefix(''); }]);
 
             return app;
         },

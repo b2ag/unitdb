@@ -1,6 +1,8 @@
 'use strict';
 unitDb = unitDb || {};
 
+unitDb.advancedEconomyFeaturesAndDescriptionLookup = {'BuildRate': 'Build rate', 'StorageMass': 'Mass storage', 'StorageEnergy': 'Energy storage', 'ProductionPerSecondMass': 'Mass yield', 'ProductionPerSecondEnergy': 'Energy yield', 'MaintenanceConsumptionPerSecondEnergy': 'Energy drain' };
+
 // decorator to make the unit object a bit more usable
 unitDb.UnitDecorator = function(blueprint) {
     var classificationLookup = {
@@ -288,5 +290,11 @@ unitDb.UnitDecorator = function(blueprint) {
             });
         }
 
-    return _.extend(self, blueprint);
+        for (var feature in unitDb.advancedEconomyFeaturesAndDescriptionLookup ) {
+          if ( blueprint.Economy[feature] ) {
+            self.showAdvancedEconomy = true;
+          }
+        }
+
+        return _.extend(self, blueprint);
 };

@@ -1,7 +1,7 @@
 FROM base/devel:latest
 
 # fetch dependencies
-RUN pacman --noconfirm -Syu bower cairo giflib graphicsmagick grunt-cli libjpeg-turbo npm
+RUN pacman --noconfirm -Syu bower cairo giflib git graphicsmagick grunt-cli libjpeg-turbo npm
 
 # more dependencies
 WORKDIR /unitdb
