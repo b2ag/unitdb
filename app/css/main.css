@@ -135,7 +135,7 @@ body {
     background: #222 fixed url(../img/background.jpg) no-repeat 0 0;
     background-size: cover;
     color: #fff;
-    padding: 3px;
+    padding: 0;
 }
 body, input, button, textarea {
     font-family: 'Muli', Verdana, Arial, sans-serif;
@@ -248,7 +248,8 @@ footer {
     left: 0;
 }
 .filters a:hover, .filters a:focus, .filters a.active,
-.faction a.thumb:hover, .faction a.thumb:focus, .faction a.thumb.selected {
+.faction a.thumb:hover, .faction a.thumb:focus, .faction a.thumb.selected,
+.tools a:hover, .tools a:focus, .tools a:active {
     background-color: rgba(255,255,255, .4);
 }
 
@@ -267,6 +268,7 @@ h1.seraphim { background-image: url(../img/SC_Seraphim.jpg) }
     padding: 5px;
     margin: 0 1px 1px 0;
     font-size: 14px;
+    max-width: 360px;
 }
 .details header {
     padding: 0;
@@ -285,9 +287,13 @@ h1.seraphim { background-image: url(../img/SC_Seraphim.jpg) }
 }
 .details table td {
     vertical-align: top;
+    white-space: nowrap;
 }
 .details table td:first-child {
     min-width:  92px;
+}
+.details table td:last-child {
+  white-space: normal;
 }
 .details table .sec td {
     border-top: 1px solid rgba(255, 255, 255, 0.16);
@@ -778,4 +784,79 @@ table.compareTable .noWrap, table.compareTable .wfcFiringCycle {
     div.gdiItemsContainer {
         margin-left: 160px;
     }
+}
+
+.tools {
+    position: fixed;
+    top: 385px;
+    left: 0;
+}
+
+.tools a {
+    border-radius: 2px;
+}
+
+.compact-toggle {
+    position: fixed;
+    margin: 0.67em;
+    top: 0;
+    right: 0;
+}
+
+.compact h1 {
+    font-size: 1.3em;
+}
+
+.compact h2 {
+    font-size: 1em;
+    margin: 3px 0;
+    font-weight: normal;
+    font-family: 'Muli', Verdana, Arial, sans-serif;
+}
+
+.compact .thumb {
+    background: none;
+    width: 21px;
+    height: 21px;
+    margin-right: 3px
+}
+
+.compact .thumb .strategic {
+    top: 1px;
+    left: 2px;
+}
+
+.compact div.gdiBaseCategory {
+    margin-bottom: 3em;
+}
+
+.compact .gdiCategory .faction {
+    min-height: 21px;
+    width: 24px;
+}
+
+.compare .tools {
+    position: relative;
+    top: 0;
+    float: left;
+    min-height: 100vh;
+    margin: 0.67em;
+}
+.compare .tools a {
+    display: block;
+    margin-bottom: 0.33em;
+}
+.compare .horizontal {
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    min-height: 100%;
+    min-height: 100vh;
+}
+.compare .horizontal .details {
+    flex: none;
+}
+.compare section {
+    padding-bottom: 0.67em;
 }

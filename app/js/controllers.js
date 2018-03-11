@@ -1,11 +1,12 @@
 'use strict';
 unitDb.controllers = {
-    homeCtrl: ['$scope', '$window', '$location', 'data', function($scope, $window, $location, data) {
+    homeCtrl: ['$scope', '$window', '$location', '$hotkey', 'data', function($scope, $window, $location, $hotkey, data) {
         $scope.factions = [];
         $scope.kinds = [];
         $scope.tech = [];
 
         $scope.index = data.items;
+        $scope.version = data.version;
         $scope.contenders = data.contenders;
 
         var toggleArray = function(arr, el) {
@@ -91,14 +92,22 @@ unitDb.controllers = {
                 }
             }
         };
+
+        $hotkey.bind('Ctrl + X', $scope.clear);
+        $hotkey.bind('Ctrl + Z', function() {
+            angular.element('#filter').focus();
+        });
     }],
 
-    gdiCtrl: ['$scope', '$window', '$location', 'data', function($scope, $window, $location, data) {
+    gdiCtrl: ['$scope', '$window', '$location', '$hotkey', 'data', function($scope, $window, $location, $hotkey, data) {
+        $scope.compact = false || (localStorage.getItem('compact') === 'true');
+
         $scope.factions = data.selectedFilterFractions;
         $scope.kinds = data.selectedFilterKinds;
         $scope.tech = data.selectedFilterTech;
 
         $scope.index = data.items;
+        $scope.version = data.version;
         $scope.visibleIndex = data.visibleIndex;
         $scope.contenders = data.contenders;
 
@@ -167,7 +176,6 @@ unitDb.controllers = {
                 if ($scope.index[c].selected)
                     $scope.index[c].selected = false;
 
-            //$scope.contenders = [];
             $scope.contenders.splice($scope.contenders.len);
         };
         $scope.strain = function(e) {
@@ -227,9 +235,21 @@ unitDb.controllers = {
                 }
             }
         };
+
+        $scope.toggleCompact = function() {
+            $scope.compact = !$scope.compact;
+            localStorage.setItem('compact', $scope.compact);
+        };
+
+        $hotkey.bind('Ctrl + X', $scope.clear);
+        $hotkey.bind('Ctrl + Z', function() {
+            angular.element('#filter').focus();
+        });
     }],
 
     compareCtrl: ['$window', '$scope', '$routeParams', 'NgTableParams', 'ngTableEventsChannel', 'data', function($window, $scope, $routeParams, NgTableParams, ngTableEventsChannel, data) {
+        $scope.layoutClass = localStorage.getItem('compareLayout');
+
         var ids = $routeParams.ids.split(',');
         $scope.contenders = _.sortBy(_.filter(data.items, function(x) { return _.contains(ids, x.id); }),
                                     function(x) { x.tmpSelectionOrder=ids.indexOf(x.id); return x.tmpSelectionOrder; });

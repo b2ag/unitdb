@@ -2,7 +2,7 @@
 
 var unitDb = (function() {
     var init = function(appName, payload) {
-            var app = angular.module(appName, ['ngRoute', 'ngSanitize', 'angular-underscore', 'ngTable']);
+            var app = angular.module(appName, ['ngRoute', 'ngSanitize', 'angular-underscore', 'drahak.hotkeys', 'ngTable']);
 
             // routing
             app.config(['$routeProvider', function($routeProvider) {
@@ -22,6 +22,15 @@ var unitDb = (function() {
                     .otherwise({
                         templateUrl: '404.html'
                     });
+            }]);
+
+            app.run(['$rootScope', '$location', function($rootScope, $location) {
+                var lastView = localStorage.getItem('lastView');
+                $location.path(lastView);
+
+                $rootScope.$on('$routeChangeStart', function() {
+                    localStorage.setItem('lastView', $location.path());
+                });
             }]);
 
             // services

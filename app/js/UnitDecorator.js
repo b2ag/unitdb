@@ -52,6 +52,7 @@ unitDb.UnitDecorator = function(blueprint) {
             'UEB2401': 'Indirect Fire Experimental',
             'URL0401': 'Indirect Fire Experimental',
             'XSB2401': 'Indirect Fire Experimental',
+            'XAB2307': 'Indirect Fire Experimental',
             'XAB1401': 'Other Experimental',
             'XEA0002': 'Other Experimental',
             'XEB2402': 'Other Experimental',
@@ -64,10 +65,10 @@ unitDb.UnitDecorator = function(blueprint) {
             'XSL0202': 'T2 Bot',
             'DRL0204': 'T2 Bot',
             'DEL0204': 'T2 Bot',
-            'UEL0203': 'T2 Amphibious/Hover Tank',
-            'URL0203': 'T2 Amphibious/Hover Tank',
-            'XAL0203': 'T2 Amphibious/Hover Tank',
-            'XSL0203': 'T2 Amphibious/Hover Tank',
+            'UEL0203': 'T2 Hover Tank',
+            'XAL0203': 'T2 Hover Tank',
+            'XSL0203': 'T2 Hover Tank',
+            'URL0203': 'T2 Amphibious Tank',
             'XEL0305': 'T3 Main Assault Bot/Tank',
             'XRL0305': 'T3 Main Assault Bot/Tank',
             'UAL0303': 'T3 Main Assault Bot/Tank',
@@ -93,12 +94,12 @@ unitDb.UnitDecorator = function(blueprint) {
             'XSB5202': 'T2 Air Staging Facility',
             'XAA0305': 'T3 Anti-Air Gunship',
             'XSB2304': 'T3 Anti-Air SAM Launcher',
-            'XSB3104': 'T3 Omni Sensor Array',
+            'XSB3104': 'T3 Omni Sensor Array'
         },
         gdiBaseClassificationLookupAndOrder = {
-            'Construction - Buildpower': ['T1 Engineer','T2 Engineer','T2 Field Engineer','T2 Engineering Station','T1 Engineering Drone','T3 Engineer','T3 Engineering Station','T3 Support Armored Command Unit','Armored Command Unit','ACU Engineering Drone'],
+            'Construction - Buildpower': ['T1 Engineer','T2 Engineer','T2 Field Engineer','T3 Engineer','T3 Support Armored Command Unit','Armored Command Unit','ACU Engineering Drone','T1 Engineering Drone','T2 Engineering Station','T3 Engineering Station'],
 
-            'Land': ['T1 Bot/Tank','T1 Light Assault Bot','T1 Mobile Light Artillery','T1 Mobile Anti-Air','T1 Land Scout','T2 Heavy Tank','T2 Amphibious/Hover Tank','T2 Bot','T2 Mobile Missile Launcher','T2 Mobile Anti-Air','T2 Mobile Shield Generator','T2 Mobile Stealth Field System','T2 Mobile Bomb','T2 Crab Egg (Flak)','T3 Main Assault Bot/Tank','T3 Assault Bot','T3 Sniper Bot','T3 Mobile Heavy Artillery','T3 Mobile Missile Platform','T3 Mobile Anti-Air','T3 Mobile Shield Generator','T3 Shield Disruptor','T3 Crab Egg (Engineer)','T3 Crab Egg (Brick)','T3 Crab Egg (Artillery)'],
+            'Land': ['T1 Bot/Tank','T1 Light Assault Bot','T1 Mobile Light Artillery','T1 Mobile Anti-Air','T1 Land Scout','T2 Heavy Tank','T2 Hover Tank','T2 Amphibious Tank','T2 Bot','T2 Mobile Missile Launcher','T2 Mobile Anti-Air','T2 Mobile Shield Generator','T2 Mobile Stealth Field System','T2 Mobile Bomb','T2 Crab Egg (Flak)','T3 Main Assault Bot/Tank','T3 Assault Bot','T3 Sniper Bot','T3 Mobile Heavy Artillery','T3 Mobile Missile Platform','T3 Mobile Anti-Air','T3 Mobile Shield Generator','T3 Shield Disruptor','T3 Crab Egg (Engineer)','T3 Crab Egg (Brick)','T3 Crab Egg (Artillery)'],
 
             'Air': ['T1 Interceptor','T1 Attack Bomber','T1 Light Gunship','T1 Air Scout','T1 Light Air Transport','T2 Combat Fighter','T2 Fighter/Bomber','T2 Gunship','T2 Torpedo Bomber','T2 Guided Missile','T2 Air Transport','T3 Air Superiority Fighter','T3 Strategic Bomber','T3 Heavy Gunship','T3 Anti-Air Gunship','T3 Torpedo Bomber','T3 Spy Plane','T3 Heavy Air Transport'],
 
@@ -188,39 +189,38 @@ unitDb.UnitDecorator = function(blueprint) {
             var stats = weaponStats(weapon);
             switch (weapon.BeamLifetime) {
                 case 1:
-                    return stats.shots + ' beam(s) every ' + stats.cycle + 's, ' + (9 * weapon.Damage) * stats.shots + ' damage total';
+                    return stats.shots + ' beam(s) / ' + stats.cycle + 's, ' + (9 * weapon.Damage) * stats.shots + ' dmg total';
                 case 0:
-                    return 'continuous beam: ' + (weapon.Damage * stats.shots);// + ' #' + (weapon.Damage * 2) + ' damage';
+                    return 'continuous beam: ' + (weapon.Damage * stats.shots);// + ' #' + (weapon.Damage * 2) + ' dmg';
             }
 
             if (stats.salvoDelay !== 0) {
                 var projectiles = stats.shots;
                 var x = Math.pow(10, 1 || 0);
                 var reload = Math.round(((stats.cycle - ((projectiles - 1) * stats.salvoDelay)) || 0) * x) / x;
-                return projectiles + ' times 1 projectile every ' + stats.salvoDelay + ' seconds + ' +
-                reload + ' seconds reload ' +
-                '= ' + stats.cycle + ' seconds total, ' + weapon.Damage * projectiles + ' damage total';
+                return projectiles + ' times 1 projectile / ' + stats.salvoDelay + ' sec + ' +
+                reload + ' sec reload ' +
+                '= ' + stats.cycle + ' sec total, ' + weapon.Damage * projectiles + ' dmg total';
             }
-            return stats.shots + ' shot' + (stats.shots > 1 ? 's' : '') + ' every ' + ( stats.cycle === 1 ? '' : Math.round(stats.cycle * 10)/10 ) + ' sec for ' + (weapon.Damage * stats.shots) + ' total damage';
+            return stats.shots + ' shot' + (stats.shots > 1 ? 's' : '') + ' / ' + ( stats.cycle === 1 ? '' : Math.round(stats.cycle * 10)/10 ) + ' sec<br/>' + (weapon.Damage * stats.shots) + ' total dmg';
         },
         beamCycle = function(weapon) {
             if (weapon.BeamCollisionDelay > 0.1) {
                 var shots = Math.round(weapon.BeamLifetime/(0.1 + weapon.BeamCollisionDelay));
                 var shotText = '';
                 if (shots > 1)
-                    shotText = 'every ' + weapon.BeamCollisionDelay + 0.1 + ' seconds ';
+                    shotText = '/ ' + weapon.BeamCollisionDelay + 0.1 + ' sec ';
                 return shots + ' times ' + weapon.Damage +
-                ' damage ' + shotText +
-                '<b>' + weapon.Damage * shots + '</b> damage total';
+                ' dmg ' + shotText + weapon.Damage * shots + ' dmg total';
             } else if (weapon.BeamLifetime === 1) {
-                return '9 times every 0.1 seconds ' + weapon.Damage + ' damage = ' + (9 * weapon.Damage) + ' damage total, 0.8 seconds total';
+                return '9 times / 0.1 sec ' + weapon.Damage + ' dmg = ' + (9 * weapon.Damage) + ' dmg total, 0.8 sec total';
             } else {
                 if (weapon.DoTPulses) {
-                    return weapon.DoTPulses + ' times ' + weapon.Damage + ' damage every ' +
-                    (weapon.DoTTime/10) + ' seconds = ' + (weapon.damage * weapon.DoTPulses) + ' total ' +
-                    (weapon.DoTTime/10 * weapon.DoTPulses - 0.1) + ' seconds total';
+                    return weapon.DoTPulses + ' times ' + weapon.Damage + ' dmg / ' +
+                    (weapon.DoTTime/10) + ' sec = ' + (weapon.damage * weapon.DoTPulses) + ' total ' +
+                    (weapon.DoTTime/10 * weapon.DoTPulses - 0.1) + ' sec total';
                 } else {
-                    return weapon.Damage + ' damage';
+                    return weapon.Damage + ' dmg';
                 }
             }
         },
