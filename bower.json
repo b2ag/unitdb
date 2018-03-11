@@ -12,12 +12,11 @@
         "underscore": "",
         "angular-underscore": "",
         "ng-table-bundle": "",
-        "jquery-sticky-table-headers": "",
-        "tablesorter": ""
+        "jquery-sticky-table-headers": ""
     },
 
     "devDependencies": {
         "angular-mocks": "",
         "angular-scenario": ""
     }
-} 
+}

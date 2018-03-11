@@ -229,11 +229,11 @@ unitDb.controllers = {
         };
     }],
 
-    compareCtrl: ['$window', '$scope', '$routeParams', 'NgTableParams', 'data', function($window, $scope, $routeParams, NgTableParams, data) {
+    compareCtrl: ['$window', '$scope', '$routeParams', 'NgTableParams', 'ngTableEventsChannel', 'data', function($window, $scope, $routeParams, NgTableParams, ngTableEventsChannel, data) {
         var ids = $routeParams.ids.split(',');
         $scope.contenders = _.sortBy(_.filter(data.items, function(x) { return _.contains(ids, x.id); }),
                                     function(x) { x.tmpSelectionOrder=ids.indexOf(x.id); return x.tmpSelectionOrder; });
-//         $scope.contenders = _.filter(data.items, function(x) { x.tmpSelectionOrder=42; return true; });
+        $scope.contenders = _.filter(data.items, function(x) { x.tmpSelectionOrder=42; return true; });
         console.log($scope.contenders);
         var tablesVisibleRowsCounts = [];
 
@@ -247,12 +247,26 @@ unitDb.controllers = {
           sortable: 'fullName',
           secondColumn: true
         }];
+        var firingCycleColumn = {
+          field: 'FiringCycle',
+          title: 'FiringCycle'
+        }
+        var enhancementKeyColumn = {
+          field: 'enhancement',
+          title: 'Upgrade',
+          groupable: 'enhancement'
+        }
 
         var abilities = [];
-        var weaponsWithUnitByCategory = {};
-        var weaponFeatureColumnsByCategory = {};
+        var weaponCategories = [];
         var weaponFeatures = [];
         var economyFeatures = [];
+        var weaponFeatureColumns = [rowHeaderColumns[0],rowHeaderColumns[1], firingCycleColumn];
+        var enhancements = [];
+        var enhancementsWithUnit = [];
+        var enhancementFeatures = [];
+        var enhancementFeatureColumns = [rowHeaderColumns[0],rowHeaderColumns[1], enhancementKeyColumn];
+        var weaponsWitUnit = [];
         var shieldColumns = false;
         for ( var itemIndex in $scope.contenders ) {
           var item = $scope.contenders[itemIndex];
@@ -274,58 +288,73 @@ unitDb.controllers = {
               }
             }
           }
+          if ( item.Enhancements ) {
+            for ( var enhancement in item.Enhancements ) {
+              if ( enhancements.indexOf( enhancement ) === -1 ) {
+                enhancements.push( enhancement );
+              }
+              var enhancementWithUnit = {'enhancement':enhancement,'unit':item};
+              enhancementWithUnit.tmpSelectionOrder=ids.indexOf(item.id);
+              enhancementWithUnit.fullName=item.fullName;
+              enhancementsWithUnit.push(enhancementWithUnit);
+              for ( var enhancementFeature in item.Enhancements[enhancement] ) {
+                if ( enhancementFeatures.indexOf( enhancementFeature ) === -1 ) {
+                  enhancementFeatures.push( enhancementFeature );
+                  var enhancementFeatureColumn = {
+                    field: enhancementFeature,
+                    title: enhancementFeature,
+                    sortable: 'enhancement.'+enhancementFeature+' || -2000000000'
+                  };
+                  enhancementFeatureColumns.push(enhancementFeatureColumn);
+                }
+              }
+            }
+          }
           if ( item.Weapon ) {
             for ( var weaponIndex in item.Weapon ) {
               var weapon = item.Weapon[weaponIndex];
               if ( ! weapon.WeaponCategory ) {
                 console.warn(weapon);
                 continue;
+              } else {
+                if ( weaponCategories.indexOf( weapon.WeaponCategory ) === -1 ) {
+                  weaponCategories.push( weapon.WeaponCategory );
+                }
               }
               var weaponWithUnit = {weapon: weapon, unit:item};
               weaponWithUnit.tmpSelectionOrder=ids.indexOf(item.id);
               weaponWithUnit.fullName=item.fullName;
-              if ( weaponsWithUnitByCategory[weapon.WeaponCategory] ) {
-                if ( weapon.WeaponCategory ) {
-                  weaponsWithUnitByCategory[weapon.WeaponCategory].push( weaponWithUnit );
-                } else {
-                  console.warn(weapon);
-                }
-              } else {
-                if ( weapon.WeaponCategory ) {
-                  var firingCycleColumn = {
-                    field: 'FiringCycle',
-                    title: 'FiringCycle'
-                  }
-                  weaponFeatureColumnsByCategory[weapon.WeaponCategory] = [rowHeaderColumns[0],rowHeaderColumns[1], firingCycleColumn];
-                  weaponsWithUnitByCategory[weapon.WeaponCategory] = [weaponWithUnit];
-                } else {
-                  console.warn(weapon);
-                }
-              }
+              weaponsWitUnit.push(weaponWithUnit);
               for ( var weaponFeature in weapon ) {
-                if ( ['WeaponCategory'].indexOf(weaponFeature) !== -1 ) continue;
                 var foundCurrentWeaponFeature = false;
-                for ( var searchWeaponFeatureIndex in weaponFeatureColumnsByCategory[weapon.WeaponCategory] ) {
-                  if ( weaponFeature === weaponFeatureColumnsByCategory[weapon.WeaponCategory][searchWeaponFeatureIndex].field ) foundCurrentWeaponFeature = true;
+                for ( var searchWeaponFeatureIndex in weaponFeatureColumns ) {
+                  if ( weaponFeature === weaponFeatureColumns[searchWeaponFeatureIndex].field ) foundCurrentWeaponFeature = true;
                 }
                 if ( foundCurrentWeaponFeature ) break;
+                var featureTitle = weaponFeature;
+                if ( weaponFeature === 'DisplayName' ) {
+                  featureTitle = 'Weapon';
+                }
                 var weaponFeatureColumn = {
                   field: weaponFeature,
-                  title: weaponFeature,
+                  title: featureTitle,
                   sortable: 'weapon.'+weaponFeature+' || -2000000000'
                 };
-                weaponFeatureColumnsByCategory[weapon.WeaponCategory].push( weaponFeatureColumn );
+                if ( weaponFeature === 'WeaponCategory' ) {
+                  weaponFeatureColumn.groupable = 'weapon.'+weaponFeature;
+                }
+                weaponFeatureColumns.push( weaponFeatureColumn );
               }
             }
           }
         }
-        var weaponFeatureColumnsByCategorySortMap = {
+        var weaponFeatureSortMap = {
           'tmpSelectionOrder': 10,
           'DisplayName': 20,
           'fullName': 30,
+          'FiringCycle': 39,
           'dps': 40,
           'RateOfFire': 41,
-          'FiringCycle': 42,
           'Damage': 50,
           'DamageRadius': 51,
           'ManualFire': 60,
@@ -355,22 +384,20 @@ unitDb.controllers = {
           'RackSalvoReloadTime': 142,
           'RackFireTogether': 143
         };
-        var weaponFeatureColumnsByCategorySort = function(x) { return weaponFeatureColumnsByCategorySortMap[x.field] || 9999; };
-        for ( var weaponsCategory in weaponFeatureColumnsByCategory ) {
-          weaponFeatureColumnsByCategory[weaponsCategory]=_.sortBy(weaponFeatureColumnsByCategory[weaponsCategory],weaponFeatureColumnsByCategorySort);
-        }
-        var weaponTablesParams = [];
-        for ( var weaponsCategory in weaponsWithUnitByCategory ) {
-          var weaponsList = weaponsWithUnitByCategory[weaponsCategory];
-          weaponTablesParams[weaponsCategory] = new NgTableParams({ count: weaponsList.length }, { dataset: weaponsList, counts: tablesVisibleRowsCounts });
-        }
+        var weaponFeatureColumnsSort = function(x) { return weaponFeatureSortMap[x.field] || 9999; };
+        var enhancementColumnsSortMap = {
+          'tmpSelectionOrder': 10,
+          'Name': 20,
+          'fullName': 30
+        };
+        var enhancementColumnsSort = function(x) { return enhancementColumnsSortMap[x.field] || 9999; };
+
         $scope.abilities = abilities.sort();
-        $scope.weaponsWithUnitByCategory = weaponsWithUnitByCategory;
-        $scope.weaponFeatureColumnsByCategory = weaponFeatureColumnsByCategory;
-        $scope.weaponTablesParams = weaponTablesParams;
         $scope.unitDb = unitDb;
 
         console.log(economyFeatures);
+        console.log(enhancements);
+        console.log(enhancementFeatures);
 
         var economyColumns = [rowHeaderColumns[0],rowHeaderColumns[1]];
         for ( var k in unitDb.advancedEconomyFeaturesAndDescriptionLookup ) {
@@ -395,26 +422,64 @@ unitDb.controllers = {
         }
         $scope.abilityColumns = abilityColumns;
 
+        $scope.weaponFeatureColumns = _.sortBy(weaponFeatureColumns,weaponFeatureColumnsSort);
+        $scope.weaponTableParams = new NgTableParams(
+          { count: weaponsWitUnit.length, group: 'weapon.WeaponCategory' },
+          { dataset: weaponsWitUnit, counts: tablesVisibleRowsCounts, groupOptions: { isExpanded: false } }
+        );
+        //$scope.weaponGroupsShow = weaponGroupsShow;
+        $scope.weaponGroupsShow = {};
+
+        $scope.enhancementFeatureColumns = _.sortBy(enhancementFeatureColumns,enhancementColumnsSort);
+        $scope.enhancementTableParams = new NgTableParams(
+          { count: enhancementsWithUnit.length, group: 'enhancement' },
+          { dataset: enhancementsWithUnit, counts: tablesVisibleRowsCounts, groupOptions: { isExpanded: false } }
+        );
+        $scope.enhancementGroupsHide = {};
+
         $scope.tableParams = new NgTableParams({ count: $scope.contenders.length }, { dataset: $scope.contenders, counts: tablesVisibleRowsCounts });
+        //$scope.tableParams = new NgTableParams({}, { dataset: $scope.contenders});
 
         $window.onscroll = function(){
           var left = (window.pageXOffset || document.body.scrollLeft) - (document.documentElement.clientLeft || 0);
-//           $('.wfctmpSelectionOrder, .wfcfullName, .wfcDisplayName').css({'position':'relative', 'left': left+'px'});
-//           if ( left > 0 ) {
-//             $('.wfcfullName div, .wfcDisplayName div').css({'background': 'rgba(34,34,34,0.5)'});
-//             $('.wfcfullName, .wfcDisplayName').css({'vertical-align':'top'});
-//           } else {
-//             $('.wfcfullName div, .wfcDisplayName div').css({'background': 'none'});
-//             $('.wfcfullName, .wfcDisplayName').css({'vertical-align':'middle'});
-//           }
-          $('.wfctmpSelectionOrder, .wfcDisplayName').css({'position':'relative', 'left': left+'px'});
+          $('.wfctmpSelectionOrder, .wfcDisplayName, .wfcName').css({'position':'relative', 'left': left+'px'});
           if ( left > 0 ) {
-            $('.wfctmpSelectionOrder, .wfcDisplayName div').css({'background': 'rgba(34,34,34,0.5)'});
-            $('.wfcDisplayName').css({'vertical-align':'top'});
+            $('.wfctmpSelectionOrder, .wfcDisplayName div, .wfcName div').css({'background': 'rgba(34,34,34,0.5)'});
+            $('.wfcDisplayName, .wfcName').css({'vertical-align':'top'});
           } else {
-            $('.wfctmpSelectionOrder, .wfcDisplayName div').css({'background': 'none'});
-            $('.wfcDisplayName').css({'vertical-align':'middle'});
+            $('.wfctmpSelectionOrder, .wfcDisplayName div, .wfcName div').css({'background': 'none'});
+            $('.wfcDisplayName, .wfcName').css({'vertical-align':'middle'});
           }
         };
+        $scope.loading = false;
+        $scope.updateStickyHeaders = function() {
+          $window.setTimeout(function(){
+            $(".stickyheaders").stickyTableHeaders('destroy');
+            $(".stickyheaders").stickyTableHeaders();
+          });
+        };
+        $scope.finishLoading = function() {
+          $window.setTimeout(function(){
+            $scope.updateStickyHeaders();
+            $scope.loading = false;
+            console.log('aus');
+            $scope.$apply();
+          },1000);
+        };
+        $scope.showSection = {};
+        $scope.toggleShowSection = function( section ) {
+          $scope.loading = true;
+          console.log('an');
+          $window.setTimeout(function(){
+            $scope.showSection[section] = !$scope.showSection[section];
+            $scope.finishLoading();
+            console.log('blubb');
+          });
+        };
+        $scope.ngTableEventHandler = function( a,b ) {
+          console.log(['bla',a,b]);
+        }
+        ngTableEventsChannel.onAfterReloadData( $scope.ngTableEventHandler, $scope );
+        $scope.showWeaponCategory = [];
     }]
 };

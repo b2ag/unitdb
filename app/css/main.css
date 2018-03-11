@@ -739,6 +739,12 @@ table.compareTable th {
   background: #222;
 }
 
+table.compareTable td.groupExpandCell {
+  white-space: nowrap;
+  text-align: left;
+}
+
+
 table.compareTable th span.sort-indicator {
 }
 
