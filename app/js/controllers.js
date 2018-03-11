@@ -253,7 +253,7 @@ unitDb.controllers = {
         var ids = $routeParams.ids.split(',');
         $scope.contenders = _.sortBy(_.filter(data.items, function(x) { return _.contains(ids, x.id); }),
                                     function(x) { x.tmpSelectionOrder=ids.indexOf(x.id); return x.tmpSelectionOrder; });
-        $scope.contenders = _.filter(data.items, function(x) { x.tmpSelectionOrder=42; return true; });
+        //$scope.contenders = _.filter(data.items, function(x) { x.tmpSelectionOrder=42; return true; });
         console.log($scope.contenders);
         var tablesVisibleRowsCounts = [];
 
@@ -482,24 +482,17 @@ unitDb.controllers = {
           $window.setTimeout(function(){
             $scope.updateStickyHeaders();
             $scope.loading = false;
-            console.log('aus');
             $scope.$apply();
           },1000);
         };
         $scope.showSection = {};
         $scope.toggleShowSection = function( section ) {
           $scope.loading = true;
-          console.log('an');
           $window.setTimeout(function(){
             $scope.showSection[section] = !$scope.showSection[section];
             $scope.finishLoading();
-            console.log('blubb');
           });
         };
-        $scope.ngTableEventHandler = function( a,b ) {
-          console.log(['bla',a,b]);
-        }
-        ngTableEventsChannel.onAfterReloadData( $scope.ngTableEventHandler, $scope );
         $scope.showWeaponCategory = [];
     }]
 };
