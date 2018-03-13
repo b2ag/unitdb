@@ -285,10 +285,11 @@ unitDb.controllers = {
         }
 
         var abilities = [];
-        var weaponCategories = [];
+//         var weaponCategories = [];
         var weaponFeatures = [];
         var economyFeatures = [];
         var weaponFeatureColumns = [rowHeaderColumns[0],rowHeaderColumns[1],rowHeaderColumns[2], firingCycleColumn];
+        //var weaponFeatureColumns = [rowHeaderColumns[0],rowHeaderColumns[1],rowHeaderColumns[2]];
         var enhancements = [];
         var enhancementsWithUnit = [];
         var enhancementFeatures = [];
@@ -342,13 +343,17 @@ unitDb.controllers = {
             for ( var weaponIndex in item.Weapon ) {
               var weapon = item.Weapon[weaponIndex];
               if ( ! weapon.WeaponCategory ) {
-                console.warn(weapon);
-                continue;
-              } else {
-                if ( weaponCategories.indexOf( weapon.WeaponCategory ) === -1 ) {
-                  weaponCategories.push( weapon.WeaponCategory );
-                }
+                // TODO FIX Blueprints!
+                weapon.WeaponCategory = "Unknown"
               }
+//               if ( ! weapon.WeaponCategory ) {
+//                 console.warn(weapon);
+//                 continue;
+//               } else {
+//                 if ( weaponCategories.indexOf( weapon.WeaponCategory ) === -1 ) {
+//                   weaponCategories.push( weapon.WeaponCategory );
+//                 }
+//               }
               var weaponWithUnit = {weapon: weapon, unit:item};
               weaponWithUnit.tmpSelectionOrder=ids.indexOf(item.id);
               weaponWithUnit.id = item.id;
@@ -359,7 +364,7 @@ unitDb.controllers = {
                 for ( var searchWeaponFeatureIndex in weaponFeatureColumns ) {
                   if ( weaponFeature === weaponFeatureColumns[searchWeaponFeatureIndex].field ) foundCurrentWeaponFeature = true;
                 }
-                if ( foundCurrentWeaponFeature ) break;
+                if ( foundCurrentWeaponFeature ) continue;
                 var featureTitle = weaponFeature;
                 if ( weaponFeature === 'DisplayName' ) {
                   featureTitle = 'Weapon';
@@ -369,20 +374,20 @@ unitDb.controllers = {
                   title: featureTitle,
                   sortable: 'weapon.'+weaponFeature+' || -2000000000'
                 };
-                if ( weaponFeature === 'WeaponCategory' ) {
-                  weaponFeatureColumn.groupable = 'weapon.'+weaponFeature;
-                }
+//                 if ( weaponFeature === 'WeaponCategory' ) {
+//                   weaponFeatureColumn.groupable = 'weapon.'+weaponFeature;
+//                 }
                 weaponFeatureColumns.push( weaponFeatureColumn );
               }
             }
           }
         }
+        console.log(weaponFeatureColumns);
         var weaponFeatureSortMap = {
           'tmpSelectionOrder': 10,
           'id': 15,
           'fullName': 20,
           'DisplayName': 30,
-          'FiringCycle': 39,
           'dps': 40,
           'RateOfFire': 41,
           'Damage': 50,
@@ -397,6 +402,7 @@ unitDb.controllers = {
           'MinRadius': 91,
           'FiringTolerance': 100,
           'FiringRandomness': 101,
+          'FiringCycle': 105,
           'TurretPitch': 110,
           'TurretPitchRange': 111,
           'TurretPitchSpeed': 112,
@@ -419,7 +425,8 @@ unitDb.controllers = {
           'tmpSelectionOrder': 10,
           'id': 15,
           'fullName': 20,
-          'Name': 30
+          'Name': 30,
+          'Slot': 40,
         };
         var enhancementColumnsSort = function(x) { return enhancementColumnsSortMap[x.field] || 9999; };
 
