@@ -866,3 +866,20 @@ table.compareTable .noWrap, table.compareTable .wfcFiringCycle {
     top: 0;
     z-index: 1;
 }
+
+.unitDetails {
+    position: fixed;
+    top: 0px;
+    bottom: 0px;
+    right: 0px;
+    overflow-y: auto;
+    z-index: 10;
+}
+.unitDetails .unitDetailsBackground {
+    background: #222 fixed url(../img/background.jpg) no-repeat 0 0;
+    background-size: cover;
+    display: table;
+}
+.unitDetails article {
+    width: 100%;
+}

@@ -320,6 +320,7 @@ unitDb.controllers = {
               }
               var enhancementWithUnit = {enhancement:enhancement,unit:item};
               enhancementWithUnit.tmpSelectionOrder=ids.indexOf(item.id);
+              enhancementWithUnit.id = item.id;
               enhancementWithUnit.fullName=item.fullName;
               enhancementsWithUnit.push(enhancementWithUnit);
               for ( var enhancementFeature in item.Enhancements[enhancement] ) {
@@ -348,6 +349,7 @@ unitDb.controllers = {
               }
               var weaponWithUnit = {weapon: weapon, unit:item};
               weaponWithUnit.tmpSelectionOrder=ids.indexOf(item.id);
+              weaponWithUnit.id = item.id;
               weaponWithUnit.fullName=item.fullName;
               weaponsWitUnit.push(weaponWithUnit);
               for ( var weaponFeature in weapon ) {
@@ -531,7 +533,13 @@ unitDb.controllers = {
             $scope.finishLoading();
           });
         };
+        $scope.showUnitDetails = function( item ) {
+          if ( $scope.activeUnitDetailUnit == item ) {
+            $scope.activeUnitDetailUnit = false;
+          } else {
+            $scope.activeUnitDetailUnit = item;
+          }
+        };
         $scope.showWeaponCategory = [];
-
     }]
 };

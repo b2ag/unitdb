@@ -1,3 +1,4 @@
+<div ng-if="activeUnitDetailUnit" class="unitDetails"><div class="unitDetailsBackground"><unit content="activeUnitDetailUnit"/></div></div>
 <div id="loadingHint" ng-if="loading" style="opacity:0.5;background:#222;width:100%;height:100%;position:fixed;z-index:1000;display:table"><div style="display:table-cell;text-align:center;vertical-align:middle;font-size:1000%">Loading...</div></div>
 <h1 ng-click="toggleShowSection('General')" style="cursor: pointer;">+ General</h1>
 <ng-include ng-if="!showSection['General']" src="'cttGeneral'"></ng-include>
@@ -22,7 +23,7 @@
 
 <script type="text/ng-template" id="cttGeneral">
 <table id="ctGeneral" ng-table="tableParams" class="compareTable stickyheaders">
- <tr class="{{ item.faction|lowercase }}" ng-repeat="item in $data">
+ <tr ng-click="showUnitDetails(item)" class="{{ item.faction|lowercase }}" ng-repeat="item in $data">
   <td title="''" sortable="'tmpSelectionOrder'"><div class="sideScrollMe"><div class="strategic icon-{{ item.faction  }}_{{ item.strategicIcon}}" ></div></div></td>
   <td title="'Id'" sortable="'id'"><a class="sideScrollMe" href="https://github.com/FAForever/fa/blob/develop/units/{{ item.id }}/{{ item.id }}_unit.bp" target="_blank">{{ item.id }}</a></td>
   <td title="'Unit'" sortable="'fullName'"><h4 class="sideScrollMe noWrap">{{ item.fullName }}</h4></td>
@@ -43,7 +44,7 @@
 
 <script type="text/ng-template" id="cttEconomy">
 <table id="ctEconomy" ng-table-dynamic="tableParams with economyColumns" class="compareTable stickyheaders">
- <tr ng-if="item.showAdvancedEconomy" class="{{ item.faction|lowercase }}" ng-repeat="item in $data">
+ <tr ng-click="showUnitDetails(item)" ng-if="item.showAdvancedEconomy" class="{{ item.faction|lowercase }}" ng-repeat="item in $data">
   <td ng-repeat="col in $columns">
     <div ng-if="col.firstColumn" class="sideScrollMe">
       <div class="strategic icon-{{ item.faction  }}_{{ item.strategicIcon}}" ></div>
@@ -62,7 +63,7 @@
 
 <script type="text/ng-template" id="cttAbilities">
 <table id="ctAbilities" ng-table-dynamic="tableParams with abilityColumns" class="compareTable stickyheaders noWrapHeaders">
- <tr ng-if="item.Display.Abilities" class="{{ item.faction|lowercase }}" ng-repeat="item in $data">
+ <tr ng-click="showUnitDetails(item)" ng-if="item.Display.Abilities" class="{{ item.faction|lowercase }}" ng-repeat="item in $data">
   <td ng-repeat="col in $columns">
     <div ng-if="col.firstColumn" class="sideScrollMe">
       <div class="strategic icon-{{ item.faction  }}_{{ item.strategicIcon}}" ></div>
@@ -81,7 +82,7 @@
 
 <script type="text/ng-template" id="cttIntel">
 <table id="ctIntel" ng-table="tableParams" class="compareTable stickyheaders">
- <tr ng-if="item.Intel" class="{{ item.faction|lowercase }}" ng-repeat="item in $data">
+ <tr ng-click="showUnitDetails(item)" ng-if="item.Intel" class="{{ item.faction|lowercase }}" ng-repeat="item in $data">
   <td title="''" sortable="'tmpSelectionOrder'"><div class="sideScrollMe"><div class="strategic icon-{{ item.faction  }}_{{ item.strategicIcon}}" ></div></div></td>
   <td title="'Id'" sortable="'id'"><a class="sideScrollMe" href="https://github.com/FAForever/fa/blob/develop/units/{{ item.id }}/{{ item.id }}_unit.bp" target="_blank">{{ item.id }}</a></td>
   <td title="'Unit'" sortable="'fullName'"><h4 class="sideScrollMe noWrap">{{ item.fullName }}</h4></td>
@@ -95,7 +96,7 @@
 
 <script type="text/ng-template" id="cttPhysics">
 <table id="ctPhysics" ng-table="tableParams" class="compareTable stickyheaders">
- <tr ng-if="item.Physics" class="{{ item.faction|lowercase }}" ng-repeat="item in $data">
+ <tr ng-click="showUnitDetails(item)" ng-if="item.Physics" class="{{ item.faction|lowercase }}" ng-repeat="item in $data">
   <td title="''" sortable="'tmpSelectionOrder'"><div class="sideScrollMe"><div class="strategic icon-{{ item.faction  }}_{{ item.strategicIcon}}" ></div></div></td>
   <td title="'Id'" sortable="'id'"><a class="sideScrollMe" href="https://github.com/FAForever/fa/blob/develop/units/{{ item.id }}/{{ item.id }}_unit.bp" target="_blank">{{ item.id }}</a></td>
   <td title="'Unit'" sortable="'fullName'"><h4 class="sideScrollMe noWrap">{{ item.fullName }}</h4></td>
@@ -110,7 +111,7 @@
 
 <script type="text/ng-template" id="cttAirPhysics">
 <table id="ctAirPhysics" ng-table="tableParams" class="compareTable stickyheaders">
- <tr ng-if="item.Air" class="{{ item.faction|lowercase }}" ng-repeat="item in $data">
+ <tr ng-click="showUnitDetails(item)" ng-if="item.Air" class="{{ item.faction|lowercase }}" ng-repeat="item in $data">
   <td title="''" sortable="'tmpSelectionOrder'"><div class="sideScrollMe"><div class="strategic icon-{{ item.faction  }}_{{ item.strategicIcon}}" ></div></div></td>
   <td title="'Id'" sortable="'id'"><a class="sideScrollMe" href="https://github.com/FAForever/fa/blob/develop/units/{{ item.id }}/{{ item.id }}_unit.bp" target="_blank">{{ item.id }}</a></td>
   <td title="'Unit'" sortable="'fullName'"><h4 class="sideScrollMe noWrap">{{ item.fullName }}</h4></td>
@@ -127,7 +128,7 @@
 
 <script type="text/ng-template" id="cttWreckage">
 <table id="ctWreckage" ng-table="tableParams" class="compareTable stickyheaders">
- <tr ng-if="item.Wreckage" class="{{ item.faction|lowercase }}" ng-repeat="item in $data">
+ <tr ng-click="showUnitDetails(item)" ng-if="item.Wreckage" class="{{ item.faction|lowercase }}" ng-repeat="item in $data">
   <td title="''" sortable="'tmpSelectionOrder'"><div class="sideScrollMe"><div class="strategic icon-{{ item.faction  }}_{{ item.strategicIcon}}" ></div></div></td>
   <td title="'Id'" sortable="'id'"><a class="sideScrollMe" href="https://github.com/FAForever/fa/blob/develop/units/{{ item.id }}/{{ item.id }}_unit.bp" target="_blank">{{ item.id }}</a></td>
   <td title="'Unit'" sortable="'fullName'"><h4 class="sideScrollMe noWrap">{{ item.fullName }}</h4></td>
@@ -140,7 +141,7 @@
 
 <script type="text/ng-template" id="cttVeterancy">
 <table id="ctVeterancy" ng-table="tableParams" class="compareTable stickyheaders">
- <tr ng-if="item.Wreckage" class="{{ item.faction|lowercase }}" ng-repeat="item in $data">
+ <tr ng-click="showUnitDetails(item)" ng-if="item.Wreckage" class="{{ item.faction|lowercase }}" ng-repeat="item in $data">
   <td title="''" sortable="'tmpSelectionOrder'"><div class="sideScrollMe"><div class="strategic icon-{{ item.faction  }}_{{ item.strategicIcon}}" ></div></div></td>
   <td title="'Id'" sortable="'id'"><a class="sideScrollMe" href="https://github.com/FAForever/fa/blob/develop/units/{{ item.id }}/{{ item.id }}_unit.bp" target="_blank">{{ item.id }}</a></td>
   <td title="'Unit'" sortable="'fullName'"><h4 class="sideScrollMe noWrap">{{ item.fullName }}</h4></td>
@@ -181,7 +182,7 @@
     <h3 style="cursor: pointer;" ng-click="weaponGroupsShow[group.value] = !weaponGroupsShow[group.value]">{{ group.value }}</h3>
   </td>
  </tr>
- <tr ng-show="!weaponGroupsShow[group.value]" class="{{ o.unit.faction|lowercase }}" ng-repeat="o in group.data" ng-repeat-end>
+ <tr ng-click="showUnitDetails(o.unit)" ng-show="!weaponGroupsShow[group.value]" class="{{ o.unit.faction|lowercase }}" ng-repeat="o in group.data" ng-repeat-end>
   <td ng-if="col.field !== 'WeaponCategory'" ng-repeat="col in $columns" class="wfc{{ col.field }}">
     <div ng-if="col.firstColumn" class="sideScrollMe">
       <div class="strategic icon-{{ o.unit.faction  }}_{{ o.unit.strategicIcon}}" ></div>
@@ -214,7 +215,7 @@
 
 <script type="text/ng-template" id="cttEnhancements">
 <table id="ctEnhancements" ng-table-dynamic="enhancementTableParams with enhancementFeatureColumns" class="compareTable stickyheaders">
- <tr class="{{ o.unit.faction|lowercase }}" ng-repeat="o in $data">
+ <tr ng-click="showUnitDetails(o.unit)" class="{{ o.unit.faction|lowercase }}" ng-repeat="o in $data">
   <td ng-repeat="col in $columns">
     <div ng-if="col.firstColumn" class="sideScrollMe">
       <div class="strategic icon-{{ o.unit.faction  }}_{{ o.unit.strategicIcon}}" ></div>
