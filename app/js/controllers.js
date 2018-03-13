@@ -253,7 +253,9 @@ unitDb.controllers = {
         var ids = $routeParams.ids.split(',');
         $scope.contenders = _.sortBy(_.filter(data.items, function(x) { return _.contains(ids, x.id); }),
                                     function(x) { x.tmpSelectionOrder=ids.indexOf(x.id); return x.tmpSelectionOrder; });
-        //$scope.contenders = _.filter(data.items, function(x) { x.tmpSelectionOrder=42; return true; });
+        if (_.contains(ids, "all")) {
+          $scope.contenders = _.filter(data.items, function(x) { x.tmpSelectionOrder=42; return true; });
+        }
         console.log($scope.contenders);
         var tablesVisibleRowsCounts = [];
 
