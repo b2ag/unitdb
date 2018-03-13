@@ -473,9 +473,11 @@ unitDb.controllers = {
             if ( left > 0 ) {
               document.styleSheets[sideScrollStyleIndex].cssRules[0].style.background = 'rgba(34,34,34,1)';
               document.styleSheets[sideScrollStyleIndex].cssRules[1].style.display = 'block';
+              document.styleSheets[sideScrollStyleIndex].cssRules[2].style.opacity = '0';
             } else {
               document.styleSheets[sideScrollStyleIndex].cssRules[0].style.background = 'none';
               document.styleSheets[sideScrollStyleIndex].cssRules[1].style.display = 'none';
+              document.styleSheets[sideScrollStyleIndex].cssRules[2].style.opacity = '1';
             }
             document.styleSheets[sideScrollStyleIndex].cssRules[0].style.left = left+'px';
           }
@@ -496,7 +498,7 @@ unitDb.controllers = {
             document.head.appendChild(sideScrollStyle);
             document.styleSheets[sideScrollStyleIndex].insertRule( "tr:hover .sideScrollMe, .sideScrollMeAlways, thead:hover + tbody .sideScrollMe, .unitNameDisplayHoverArea:hover + div.unitNameDisplayHoverAreaNeighbor .sideScrollMe { position: relative; left: 0; background: none; opacity: 1; transition:opacity 250ms ease-out;}", 0 );
             document.styleSheets[sideScrollStyleIndex].insertRule( ".unitNameDisplayHoverArea { position: fixed; top: 0px; bottom: 0px; left: 0px; width: 32px; height: 100%; z-index: 20;}", 1 );
-            document.styleSheets[sideScrollStyleIndex].insertRule( "tr:hover .sideScrollMe:hover { opacity: 0; transition:opacity 250ms ease-out;}", 2 );
+            document.styleSheets[sideScrollStyleIndex].insertRule( "tr:hover .sideScrollMe:hover { opacity: 1; transition:opacity 250ms ease-out;}", 2 );
             console.log(document.styleSheets.length);
           }
         });
