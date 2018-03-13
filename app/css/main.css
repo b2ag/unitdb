@@ -861,6 +861,7 @@ table.compareTable .noWrap, table.compareTable .wfcFiringCycle {
     padding-bottom: 0.67em;
 }
 
+
 .stickyheaders th {
     position: sticky;
     top: 0;
@@ -882,4 +883,7 @@ table.compareTable .noWrap, table.compareTable .wfcFiringCycle {
 }
 .unitDetails article {
     width: 100%;
+}
+.compareTable tr:hover {
+    cursor: pointer;
 }

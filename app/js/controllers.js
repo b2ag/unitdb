@@ -456,41 +456,27 @@ unitDb.controllers = {
           { count: weaponsWitUnit.length, group: 'weapon.WeaponCategory' },
           { dataset: weaponsWitUnit, counts: tablesVisibleRowsCounts, groupOptions: { isExpanded: false } }
         );
-        //$scope.weaponGroupsShow = weaponGroupsShow;
         $scope.weaponGroupsShow = {};
 
         $scope.enhancementFeatureColumns = _.sortBy(enhancementFeatureColumns,enhancementColumnsSort);
-//         $scope.enhancementTableParams = new NgTableParams(
-//           { count: enhancementsWithUnit.length, group: 'enhancement' },
-//           { dataset: enhancementsWithUnit, counts: tablesVisibleRowsCounts, groupOptions: { isExpanded: false } }
-//         );
         $scope.enhancementTableParams = new NgTableParams({ count: enhancementsWithUnit.length }, { dataset: enhancementsWithUnit, counts: tablesVisibleRowsCounts });
         $scope.enhancementGroupsHide = {};
 
         $scope.tableParams = new NgTableParams({ count: $scope.contenders.length }, { dataset: $scope.contenders, counts: tablesVisibleRowsCounts });
-        //$scope.tableParams = new NgTableParams({}, { dataset: $scope.contenders});
 
         $window.sideScrollStyleIndex = -1;
         $window.sideScrollStuff = function(){
           var left = (window.pageXOffset || document.body.scrollLeft) - (document.documentElement.clientLeft || 0);
           if ( sideScrollStyleIndex != -1 ) {
             if ( left > 0 ) {
-              document.styleSheets[sideScrollStyleIndex].cssRules[0].style.background = 'rgba(34,34,34,0.8)';
+              document.styleSheets[sideScrollStyleIndex].cssRules[0].style.background = 'rgba(34,34,34,1)';
+              document.styleSheets[sideScrollStyleIndex].cssRules[1].style.display = 'block';
             } else {
               document.styleSheets[sideScrollStyleIndex].cssRules[0].style.background = 'none';
+              document.styleSheets[sideScrollStyleIndex].cssRules[1].style.display = 'none';
             }
             document.styleSheets[sideScrollStyleIndex].cssRules[0].style.left = left+'px';
           }
-//           $('.wfctmpSelectionOrder, .wfcDisplayName, .wfcName, .sideScrollMe').css({'position':'relative', 'left': left+'px'});
-//           if ( left > 0 ) {
-//             $('.wfctmpSelectionOrder, .wfcDisplayName, .wfcName, .sideScrollMe').css({'background': 'rgba(34,34,34,0.8)'});
-//             //$('.wfctmpSelectionOrder, .wfcDisplayName div, .wfcName div').css({'background': 'rgba(34,34,34,0.5)'});
-//             //$('.wfcDisplayName, .wfcName').css({'vertical-align':'top'});
-//           } else {
-//             $('.wfctmpSelectionOrder, .wfcDisplayName, .wfcName, .sideScrollMe').css({'background': 'none'});
-//             //$('.wfctmpSelectionOrder, .wfcDisplayName div, .wfcName div').css({'background': 'none'});
-//             //$('.wfcDisplayName, .wfcName').css({'vertical-align':'middle'});
-//           }
         };
         $window.sideScrollStuffTimer = -1
         $window.onscroll = function(){
@@ -506,21 +492,17 @@ unitDb.controllers = {
             var sideScrollStyle = document.createElement("style");
             sideScrollStyle.appendChild(document.createTextNode(""));
             document.head.appendChild(sideScrollStyle);
-            document.styleSheets[sideScrollStyleIndex].insertRule( ".sideScrollMe { position: relative; left: 0; background: none }", 0 );
+            document.styleSheets[sideScrollStyleIndex].insertRule( "tr:hover .sideScrollMe, .sideScrollMeAlways, thead:hover + tbody .sideScrollMe, .unitNameDisplayHoverArea:hover + div.unitNameDisplayHoverAreaNeighbor .sideScrollMe { position: relative; left: 0; background: none}", 0 );
+            document.styleSheets[sideScrollStyleIndex].insertRule( ".unitNameDisplayHoverArea { position: fixed; top: 0px; bottom: 0px; left: 0px; width: 32px; height: 100%; z-index: 20;}", 1 );
             console.log(document.styleSheets.length);
           }
         });
         $scope.loading = false;
         $scope.updateStickyHeaders = function() {
-//           $window.setTimeout(function(){
-//             $(".stickyheaders").stickyTableHeaders('destroy');
-//             $(".stickyheaders").stickyTableHeaders();
-//           });
             $(".stickyheaders th").css({'position': 'sticky', 'top': 0, 'z-index': 1});
         };
         $scope.finishLoading = function() {
           $window.setTimeout(function(){
-            //$scope.updateStickyHeaders();
             $scope.loading = false;
             $scope.$apply();
           },1000);
