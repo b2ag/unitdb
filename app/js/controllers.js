@@ -494,8 +494,9 @@ unitDb.controllers = {
             var sideScrollStyle = document.createElement("style");
             sideScrollStyle.appendChild(document.createTextNode(""));
             document.head.appendChild(sideScrollStyle);
-            document.styleSheets[sideScrollStyleIndex].insertRule( "tr:hover .sideScrollMe, .sideScrollMeAlways, thead:hover + tbody .sideScrollMe, .unitNameDisplayHoverArea:hover + div.unitNameDisplayHoverAreaNeighbor .sideScrollMe { position: relative; left: 0; background: none}", 0 );
+            document.styleSheets[sideScrollStyleIndex].insertRule( "tr:hover .sideScrollMe, .sideScrollMeAlways, thead:hover + tbody .sideScrollMe, .unitNameDisplayHoverArea:hover + div.unitNameDisplayHoverAreaNeighbor .sideScrollMe { position: relative; left: 0; background: none; opacity: 1; transition:opacity 250ms ease-out;}", 0 );
             document.styleSheets[sideScrollStyleIndex].insertRule( ".unitNameDisplayHoverArea { position: fixed; top: 0px; bottom: 0px; left: 0px; width: 32px; height: 100%; z-index: 20;}", 1 );
+            document.styleSheets[sideScrollStyleIndex].insertRule( "tr:hover .sideScrollMe:hover { opacity: 0; transition:opacity 250ms ease-out;}", 1 );
             console.log(document.styleSheets.length);
           }
         });
