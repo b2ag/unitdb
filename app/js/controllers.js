@@ -262,10 +262,15 @@ unitDb.controllers = {
           sortable: 'tmpSelectionOrder',
           firstColumn: true
         },{
+          field: 'id',
+          title: 'Id',
+          sortable: 'id',
+          secondColumn: true
+        },{
           field: 'fullName',
           title: 'Unit',
           sortable: 'fullName',
-          secondColumn: true
+          thirdColumn: true
         }];
         var firingCycleColumn = {
           field: 'FiringCycle',
@@ -281,11 +286,11 @@ unitDb.controllers = {
         var weaponCategories = [];
         var weaponFeatures = [];
         var economyFeatures = [];
-        var weaponFeatureColumns = [rowHeaderColumns[0],rowHeaderColumns[1], firingCycleColumn];
+        var weaponFeatureColumns = [rowHeaderColumns[0],rowHeaderColumns[1],rowHeaderColumns[2], firingCycleColumn];
         var enhancements = [];
         var enhancementsWithUnit = [];
         var enhancementFeatures = [];
-        var enhancementFeatureColumns = [rowHeaderColumns[0],rowHeaderColumns[1], enhancementKeyColumn];
+        var enhancementFeatureColumns = [rowHeaderColumns[0],rowHeaderColumns[1],rowHeaderColumns[2], enhancementKeyColumn];
         var weaponsWitUnit = [];
         var shieldColumns = false;
         for ( var itemIndex in $scope.contenders ) {
@@ -313,7 +318,7 @@ unitDb.controllers = {
               if ( enhancements.indexOf( enhancement ) === -1 ) {
                 enhancements.push( enhancement );
               }
-              var enhancementWithUnit = {'enhancement':enhancement,'unit':item};
+              var enhancementWithUnit = {enhancement:enhancement,unit:item};
               enhancementWithUnit.tmpSelectionOrder=ids.indexOf(item.id);
               enhancementWithUnit.fullName=item.fullName;
               enhancementsWithUnit.push(enhancementWithUnit);
@@ -323,7 +328,7 @@ unitDb.controllers = {
                   var enhancementFeatureColumn = {
                     field: enhancementFeature,
                     title: enhancementFeature,
-                    sortable: 'enhancement.'+enhancementFeature+' || -2000000000'
+                    sortable: 'unit.Enhancements[enhancement].'+enhancementFeature+' || -2000000000'
                   };
                   enhancementFeatureColumns.push(enhancementFeatureColumn);
                 }
@@ -370,8 +375,9 @@ unitDb.controllers = {
         }
         var weaponFeatureSortMap = {
           'tmpSelectionOrder': 10,
-          'DisplayName': 20,
-          'fullName': 30,
+          'id': 15,
+          'fullName': 20,
+          'DisplayName': 30,
           'FiringCycle': 39,
           'dps': 40,
           'RateOfFire': 41,
@@ -407,8 +413,9 @@ unitDb.controllers = {
         var weaponFeatureColumnsSort = function(x) { return weaponFeatureSortMap[x.field] || 9999; };
         var enhancementColumnsSortMap = {
           'tmpSelectionOrder': 10,
-          'Name': 20,
-          'fullName': 30
+          'id': 15,
+          'fullName': 20,
+          'Name': 30
         };
         var enhancementColumnsSort = function(x) { return enhancementColumnsSortMap[x.field] || 9999; };
 
@@ -419,7 +426,7 @@ unitDb.controllers = {
         console.log(enhancements);
         console.log(enhancementFeatures);
 
-        var economyColumns = [rowHeaderColumns[0],rowHeaderColumns[1]];
+        var economyColumns = [rowHeaderColumns[0],rowHeaderColumns[1],rowHeaderColumns[2]];
         for ( var k in unitDb.advancedEconomyFeaturesAndDescriptionLookup ) {
           var titleString = unitDb.advancedEconomyFeaturesAndDescriptionLookup[k];
           economyColumns.push({
@@ -430,7 +437,7 @@ unitDb.controllers = {
         }
         $scope.economyColumns = economyColumns;
 
-        var abilityColumns = [rowHeaderColumns[0],rowHeaderColumns[1]];
+        var abilityColumns = [rowHeaderColumns[0],rowHeaderColumns[1],rowHeaderColumns[2]];
         for ( var abilityIndex in abilities ) {
           var abilityString = abilities[abilityIndex];
           abilityColumns.push({
@@ -451,36 +458,67 @@ unitDb.controllers = {
         $scope.weaponGroupsShow = {};
 
         $scope.enhancementFeatureColumns = _.sortBy(enhancementFeatureColumns,enhancementColumnsSort);
-        $scope.enhancementTableParams = new NgTableParams(
-          { count: enhancementsWithUnit.length, group: 'enhancement' },
-          { dataset: enhancementsWithUnit, counts: tablesVisibleRowsCounts, groupOptions: { isExpanded: false } }
-        );
+//         $scope.enhancementTableParams = new NgTableParams(
+//           { count: enhancementsWithUnit.length, group: 'enhancement' },
+//           { dataset: enhancementsWithUnit, counts: tablesVisibleRowsCounts, groupOptions: { isExpanded: false } }
+//         );
+        $scope.enhancementTableParams = new NgTableParams({ count: enhancementsWithUnit.length }, { dataset: enhancementsWithUnit, counts: tablesVisibleRowsCounts });
         $scope.enhancementGroupsHide = {};
 
         $scope.tableParams = new NgTableParams({ count: $scope.contenders.length }, { dataset: $scope.contenders, counts: tablesVisibleRowsCounts });
         //$scope.tableParams = new NgTableParams({}, { dataset: $scope.contenders});
 
-        $window.onscroll = function(){
+        $window.sideScrollStyleIndex = -1;
+        $window.sideScrollStuff = function(){
           var left = (window.pageXOffset || document.body.scrollLeft) - (document.documentElement.clientLeft || 0);
-          $('.wfctmpSelectionOrder, .wfcDisplayName, .wfcName').css({'position':'relative', 'left': left+'px'});
-          if ( left > 0 ) {
-            $('.wfctmpSelectionOrder, .wfcDisplayName div, .wfcName div').css({'background': 'rgba(34,34,34,0.5)'});
-            $('.wfcDisplayName, .wfcName').css({'vertical-align':'top'});
-          } else {
-            $('.wfctmpSelectionOrder, .wfcDisplayName div, .wfcName div').css({'background': 'none'});
-            $('.wfcDisplayName, .wfcName').css({'vertical-align':'middle'});
+          if ( sideScrollStyleIndex != -1 ) {
+            if ( left > 0 ) {
+              document.styleSheets[sideScrollStyleIndex].cssRules[0].style.background = 'rgba(34,34,34,0.8)';
+            } else {
+              document.styleSheets[sideScrollStyleIndex].cssRules[0].style.background = 'none';
+            }
+            document.styleSheets[sideScrollStyleIndex].cssRules[0].style.left = left+'px';
           }
+//           $('.wfctmpSelectionOrder, .wfcDisplayName, .wfcName, .sideScrollMe').css({'position':'relative', 'left': left+'px'});
+//           if ( left > 0 ) {
+//             $('.wfctmpSelectionOrder, .wfcDisplayName, .wfcName, .sideScrollMe').css({'background': 'rgba(34,34,34,0.8)'});
+//             //$('.wfctmpSelectionOrder, .wfcDisplayName div, .wfcName div').css({'background': 'rgba(34,34,34,0.5)'});
+//             //$('.wfcDisplayName, .wfcName').css({'vertical-align':'top'});
+//           } else {
+//             $('.wfctmpSelectionOrder, .wfcDisplayName, .wfcName, .sideScrollMe').css({'background': 'none'});
+//             //$('.wfctmpSelectionOrder, .wfcDisplayName div, .wfcName div').css({'background': 'none'});
+//             //$('.wfcDisplayName, .wfcName').css({'vertical-align':'middle'});
+//           }
         };
+        $window.sideScrollStuffTimer = -1
+        $window.onscroll = function(){
+          if ( sideScrollStuffTimer != -1 ) {
+            clearTimeout(sideScrollStuffTimer)
+            sideScrollStuffTimer = -1
+          }
+          sideScrollStuffTimer=setTimeout(sideScrollStuff,50)
+        };
+        $scope.$on('$viewContentLoaded', function() {
+          if ( sideScrollStyleIndex == -1 ) {
+            sideScrollStyleIndex = document.styleSheets.length;
+            var sideScrollStyle = document.createElement("style");
+            sideScrollStyle.appendChild(document.createTextNode(""));
+            document.head.appendChild(sideScrollStyle);
+            document.styleSheets[sideScrollStyleIndex].insertRule( ".sideScrollMe { position: relative; left: 0; background: none }", 0 );
+            console.log(document.styleSheets.length);
+          }
+        });
         $scope.loading = false;
         $scope.updateStickyHeaders = function() {
-          $window.setTimeout(function(){
-            $(".stickyheaders").stickyTableHeaders('destroy');
-            $(".stickyheaders").stickyTableHeaders();
-          });
+//           $window.setTimeout(function(){
+//             $(".stickyheaders").stickyTableHeaders('destroy');
+//             $(".stickyheaders").stickyTableHeaders();
+//           });
+            $(".stickyheaders th").css({'position': 'sticky', 'top': 0, 'z-index': 1});
         };
         $scope.finishLoading = function() {
           $window.setTimeout(function(){
-            $scope.updateStickyHeaders();
+            //$scope.updateStickyHeaders();
             $scope.loading = false;
             $scope.$apply();
           },1000);
@@ -494,5 +532,6 @@ unitDb.controllers = {
           });
         };
         $scope.showWeaponCategory = [];
+
     }]
 };

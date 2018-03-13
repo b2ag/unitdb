@@ -860,3 +860,9 @@ table.compareTable .noWrap, table.compareTable .wfcFiringCycle {
 .compare section {
     padding-bottom: 0.67em;
 }
+
+.stickyheaders th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}

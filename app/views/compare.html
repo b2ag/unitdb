@@ -23,8 +23,9 @@
 <script type="text/ng-template" id="cttGeneral">
 <table id="ctGeneral" ng-table="tableParams" class="compareTable stickyheaders">
  <tr class="{{ item.faction|lowercase }}" ng-repeat="item in $data">
-  <td title="''" sortable="'tmpSelectionOrder'"><div class="thumb icon-{{ item.id }}" title="{{ item.fullName }}"><span class="strategic icon-{{ item.faction  }}_{{ item.strategicIcon}}" ></span></div></td>
-  <td title="'Unit'" sortable="'fullName'"><h4>{{ item.fullName }}</h4><a href="https://github.com/FAForever/fa/blob/develop/units/{{ item.id }}/{{ item.id }}_unit.bp" target="_blank"><small>{{ item.id }}</small></a></td>
+  <td title="''" sortable="'tmpSelectionOrder'"><div class="sideScrollMe"><div class="strategic icon-{{ item.faction  }}_{{ item.strategicIcon}}" ></div></div></td>
+  <td title="'Id'" sortable="'id'"><a class="sideScrollMe" href="https://github.com/FAForever/fa/blob/develop/units/{{ item.id }}/{{ item.id }}_unit.bp" target="_blank">{{ item.id }}</a></td>
+  <td title="'Unit'" sortable="'fullName'"><h4 class="sideScrollMe noWrap">{{ item.fullName }}</h4></td>
   <!-- after header column -->
   <td title="'Mass Cost'" sortable="'Economy.BuildCostMass'"><div class="ic icon-mass"></div>{{ item.Economy.BuildCostMass | shorten }}</td>
   <td title="'Energy Cost'" sortable="'Economy.BuildCostEnergy'"><div class="ic icon-energy"></div>{{ item.Economy.BuildCostEnergy | shorten }}</td>
@@ -44,11 +45,14 @@
 <table id="ctEconomy" ng-table-dynamic="tableParams with economyColumns" class="compareTable stickyheaders">
  <tr ng-if="item.showAdvancedEconomy" class="{{ item.faction|lowercase }}" ng-repeat="item in $data">
   <td ng-repeat="col in $columns">
-    <div ng-if="col.firstColumn" class="thumb icon-{{ item.id }}">
-      <span class="strategic icon-{{ item.faction  }}_{{ item.strategicIcon}}" ></span>
+    <div ng-if="col.firstColumn" class="sideScrollMe">
+      <div class="strategic icon-{{ item.faction  }}_{{ item.strategicIcon}}" ></div>
     </div>
-    <div ng-if="col.secondColumn">
-      <h4>{{ item.fullName }}</h4><a href="https://github.com/FAForever/fa/blob/develop/units/{{ item.id }}/{{ item.id }}_unit.bp" target="_blank"><small>{{ item.id }}</small></a>
+    <div ng-if="col.secondColumn" class="sideScrollMe">
+      <a href="https://github.com/FAForever/fa/blob/develop/units/{{ item.id }}/{{ item.id }}_unit.bp" target="_blank">{{ item.id }}</a>
+    </div>
+    <div ng-if="col.thirdColumn" class="sideScrollMe noWrap">
+      <h4>{{ item.fullName }}</h4>
     </div>
     {{item.Economy[col.field]}}
   </td>
@@ -60,15 +64,16 @@
 <table id="ctAbilities" ng-table-dynamic="tableParams with abilityColumns" class="compareTable stickyheaders noWrapHeaders">
  <tr ng-if="item.Display.Abilities" class="{{ item.faction|lowercase }}" ng-repeat="item in $data">
   <td ng-repeat="col in $columns">
-    <div ng-if="col.firstColumn" class="thumb icon-{{ item.id }}">
-      <span class="strategic icon-{{ item.faction  }}_{{ item.strategicIcon}}" ></span>
+    <div ng-if="col.firstColumn" class="sideScrollMe">
+      <div class="strategic icon-{{ item.faction  }}_{{ item.strategicIcon}}" ></div>
     </div>
-    <div class="noWrap" ng-if="col.secondColumn">
-      <h4>{{ item.fullName }}</h4><a href="https://github.com/FAForever/fa/blob/develop/units/{{ item.id }}/{{ item.id }}_unit.bp" target="_blank"><small>{{ item.id }}</small></a>
+    <div ng-if="col.secondColumn" class="sideScrollMe">
+      <a href="https://github.com/FAForever/fa/blob/develop/units/{{ item.id }}/{{ item.id }}_unit.bp" target="_blank">{{ item.id }}</a>
     </div>
-    <div ng-if="col.normalColumn && item.Display.Abilities.indexOf(col.field) != -1" class="thumb icon-{{ item.id }}" title="{{ item.fullName }}">
-      <span class="strategic icon-{{ item.faction  }}_{{ item.strategicIcon}}" ></span>
+    <div ng-if="col.thirdColumn" class="sideScrollMe noWrap">
+      <h4>{{ item.fullName }}</h4>
     </div>
+    <div ng-if="col.normalColumn && item.Display.Abilities.indexOf(col.field) != -1" class="strategic icon-{{ item.faction  }}_{{ item.strategicIcon}}" style="display:inline-block"></div>
   </td>
  </tr>
 </table>
@@ -77,8 +82,9 @@
 <script type="text/ng-template" id="cttIntel">
 <table id="ctIntel" ng-table="tableParams" class="compareTable stickyheaders">
  <tr ng-if="item.Intel" class="{{ item.faction|lowercase }}" ng-repeat="item in $data">
-  <td title="''" sortable="'tmpSelectionOrder'"><div class="thumb icon-{{ item.id }}" title="{{ item.fullName }}"><span class="strategic icon-{{ item.faction  }}_{{ item.strategicIcon}}" ></span></div></td>
-  <td title="'Unit'" sortable="'fullName'"><h4>{{ item.fullName }}</h4><a href="https://github.com/FAForever/fa/blob/develop/units/{{ item.id }}/{{ item.id }}_unit.bp" target="_blank"><small>{{ item.id }}</small></a></td>
+  <td title="''" sortable="'tmpSelectionOrder'"><div class="sideScrollMe"><div class="strategic icon-{{ item.faction  }}_{{ item.strategicIcon}}" ></div></div></td>
+  <td title="'Id'" sortable="'id'"><a class="sideScrollMe" href="https://github.com/FAForever/fa/blob/develop/units/{{ item.id }}/{{ item.id }}_unit.bp" target="_blank">{{ item.id }}</a></td>
+  <td title="'Unit'" sortable="'fullName'"><h4 class="sideScrollMe noWrap">{{ item.fullName }}</h4></td>
   <!-- after header column -->
   <td title="'Vision Radius'" sortable="'Intel.VisionRadius || -2000000000'">{{ item.Intel.VisionRadius }}</td>
   <td title="'Radar Radius'" sortable="'Intel.RadarRadius || -2000000000'">{{ item.Intel.RadarRadius }}</td>
@@ -90,8 +96,9 @@
 <script type="text/ng-template" id="cttPhysics">
 <table id="ctPhysics" ng-table="tableParams" class="compareTable stickyheaders">
  <tr ng-if="item.Physics" class="{{ item.faction|lowercase }}" ng-repeat="item in $data">
-  <td title="''" sortable="'tmpSelectionOrder'"><div class="thumb icon-{{ item.id }}" title="{{ item.fullName }}"><span class="strategic icon-{{ item.faction  }}_{{ item.strategicIcon}}" ></span></div></td>
-  <td title="'Unit'" sortable="'fullName'"><h4>{{ item.fullName }}</h4><a href="https://github.com/FAForever/fa/blob/develop/units/{{ item.id }}/{{ item.id }}_unit.bp" target="_blank"><small>{{ item.id }}</small></a></td>
+  <td title="''" sortable="'tmpSelectionOrder'"><div class="sideScrollMe"><div class="strategic icon-{{ item.faction  }}_{{ item.strategicIcon}}" ></div></div></td>
+  <td title="'Id'" sortable="'id'"><a class="sideScrollMe" href="https://github.com/FAForever/fa/blob/develop/units/{{ item.id }}/{{ item.id }}_unit.bp" target="_blank">{{ item.id }}</a></td>
+  <td title="'Unit'" sortable="'fullName'"><h4 class="sideScrollMe noWrap">{{ item.fullName }}</h4></td>
   <!-- after header column -->
   <td title="'Max speed'" sortable="'Physics.MaxSpeed || -2000000000'">{{ item.Physics.MaxSpeed }}</td>
   <td title="'Turn rate'" sortable="'Physics.TurnRate || -2000000000'">{{ item.Physics.TurnRate }}</td>
@@ -104,8 +111,9 @@
 <script type="text/ng-template" id="cttAirPhysics">
 <table id="ctAirPhysics" ng-table="tableParams" class="compareTable stickyheaders">
  <tr ng-if="item.Air" class="{{ item.faction|lowercase }}" ng-repeat="item in $data">
-  <td title="''" sortable="'tmpSelectionOrder'"><div class="thumb icon-{{ item.id }}" title="{{ item.fullName }}"><span class="strategic icon-{{ item.faction  }}_{{ item.strategicIcon}}" ></span></div></td>
-  <td title="'Unit'" sortable="'fullName'"><h4>{{ item.fullName }}</h4><a href="https://github.com/FAForever/fa/blob/develop/units/{{ item.id }}/{{ item.id }}_unit.bp" target="_blank"><small>{{ item.id }}</small></a></td>
+  <td title="''" sortable="'tmpSelectionOrder'"><div class="sideScrollMe"><div class="strategic icon-{{ item.faction  }}_{{ item.strategicIcon}}" ></div></div></td>
+  <td title="'Id'" sortable="'id'"><a class="sideScrollMe" href="https://github.com/FAForever/fa/blob/develop/units/{{ item.id }}/{{ item.id }}_unit.bp" target="_blank">{{ item.id }}</a></td>
+  <td title="'Unit'" sortable="'fullName'"><h4 class="sideScrollMe noWrap">{{ item.fullName }}</h4></td>
   <!-- after header column -->
   <td title="'Min speed'" sortable="'Air.MinAirspeed || -2000000000'">{{ item.Air.MinAirspeed }}</td>
   <td title="'Max speed'" sortable="'Air.MaxAirspeed || -2000000000'">{{ item.Air.MaxAirspeed }}</td>
@@ -120,8 +128,9 @@
 <script type="text/ng-template" id="cttWreckage">
 <table id="ctWreckage" ng-table="tableParams" class="compareTable stickyheaders">
  <tr ng-if="item.Wreckage" class="{{ item.faction|lowercase }}" ng-repeat="item in $data">
-  <td title="''" sortable="'tmpSelectionOrder'"><div class="thumb icon-{{ item.id }}" title="{{ item.fullName }}"><span class="strategic icon-{{ item.faction  }}_{{ item.strategicIcon}}" ></span></div></td>
-  <td title="'Unit'" sortable="'fullName'"><h4>{{ item.fullName }}</h4><a href="https://github.com/FAForever/fa/blob/develop/units/{{ item.id }}/{{ item.id }}_unit.bp" target="_blank"><small>{{ item.id }}</small></a></td>
+  <td title="''" sortable="'tmpSelectionOrder'"><div class="sideScrollMe"><div class="strategic icon-{{ item.faction  }}_{{ item.strategicIcon}}" ></div></div></td>
+  <td title="'Id'" sortable="'id'"><a class="sideScrollMe" href="https://github.com/FAForever/fa/blob/develop/units/{{ item.id }}/{{ item.id }}_unit.bp" target="_blank">{{ item.id }}</a></td>
+  <td title="'Unit'" sortable="'fullName'"><h4 class="sideScrollMe noWrap">{{ item.fullName }}</h4></td>
   <!-- after header column -->
   <td title="'Health'" sortable="'Wreckage.HealthMult*Defense.Health || -2000000000'">{{ item.Wreckage.HealthMult*item.Defense.Health | round }}</td>
   <td title="'Mass'" sortable="'Wreckage.MassMult*Economy.BuildCostMass || -2000000000'">{{ item.Wreckage.MassMult*item.Economy.BuildCostMass | round }}</td>
@@ -132,34 +141,35 @@
 <script type="text/ng-template" id="cttVeterancy">
 <table id="ctVeterancy" ng-table="tableParams" class="compareTable stickyheaders">
  <tr ng-if="item.Wreckage" class="{{ item.faction|lowercase }}" ng-repeat="item in $data">
-  <td title="''" sortable="'tmpSelectionOrder'"><div class="thumb icon-{{ item.id }}" title="{{ item.fullName }}"><span class="strategic icon-{{ item.faction  }}_{{ item.strategicIcon}}" ></span></div></td>
-  <td title="'Unit'" sortable="'fullName'"><h4>{{ item.fullName }}</h4><a href="https://github.com/FAForever/fa/blob/develop/units/{{ item.id }}/{{ item.id }}_unit.bp" target="_blank"><small>{{ item.id }}</small></a></td>
+  <td title="''" sortable="'tmpSelectionOrder'"><div class="sideScrollMe"><div class="strategic icon-{{ item.faction  }}_{{ item.strategicIcon}}" ></div></div></td>
+  <td title="'Id'" sortable="'id'"><a class="sideScrollMe" href="https://github.com/FAForever/fa/blob/develop/units/{{ item.id }}/{{ item.id }}_unit.bp" target="_blank">{{ item.id }}</a></td>
+  <td title="'Unit'" sortable="'fullName'"><h4 class="sideScrollMe noWrap">{{ item.fullName }}</h4></td>
   <!-- after header column -->
   <!-- Level 1 -->
-  <td title="'Level 1:&nbsp;'" />
+  <td title="'L1:&nbsp;'" />
   <td title="'Kills'" sortable="'Veteran[\'Level1\'] || -2000000000'">{{ item.Veteran['Level1'] }}</td>
-  <td title="'Health'" sortable="'(Veteran[\'Level1\'] && Defense.Health * (1 + 1 * 0.1)) || -2000000000'"><div ng-if="item.Veteran['Level1']">{{ item.Defense.Health * (1 + 1 * 0.1) | round }} hp</div></td>
-  <td title="'Regeneration'" sortable="'(Defense.RegenRate+Buffs.Regen[\'Level1\']) || -2000000000'"><div ng-if="item.Buffs.Regen['Level1']">{{ item.Defense.RegenRate + item.Buffs.Regen['Level1'] }} hp/s</div></td>
+  <td title="'Health'" sortable="'(Veteran[\'Level1\'] && Defense.Health * (1 + 1 * 0.1)) || -2000000000'"><div ng-if="item.Veteran['Level1']">{{ item.Defense.Health * (1 + 1 * 0.1) | round }}</div></td>
+  <td title="'Regeneration'" sortable="'(Defense.RegenRate+Buffs.Regen[\'Level1\']) || -2000000000'"><div ng-if="item.Buffs.Regen['Level1']" class="noWrap">{{ item.Defense.RegenRate + item.Buffs.Regen['Level1'] }} hp/s</div></td>
   <!-- Level 2 -->
-  <td title="'Level 2:&nbsp;'" />
+  <td title="'L2:&nbsp;'" />
   <td title="'Kills'" sortable="'Veteran[\'Level2\'] || -2000000000'">{{ item.Veteran['Level2'] }}</td>
-  <td title="'Health'" sortable="'(Veteran[\'Level2\'] && Defense.Health * (1 + 2 * 0.1)) || -2000000000'"><div ng-if="item.Veteran['Level2']">{{ item.Defense.Health * (1 + 2 * 0.1) | round }} hp</div></td>
-  <td title="'Regeneration'" sortable="'(Defense.RegenRate+Buffs.Regen[\'Level2\']) || -2000000000'"><div ng-if="item.Buffs.Regen['Level2']">{{ item.Defense.RegenRate + item.Buffs.Regen['Level2'] }} hp/s</div></td>
+  <td title="'Health'" sortable="'(Veteran[\'Level2\'] && Defense.Health * (1 + 2 * 0.1)) || -2000000000'"><div ng-if="item.Veteran['Level2']">{{ item.Defense.Health * (1 + 2 * 0.1) | round }}</div></td>
+  <td title="'Regeneration'" sortable="'(Defense.RegenRate+Buffs.Regen[\'Level2\']) || -2000000000'"><div ng-if="item.Buffs.Regen['Level2']" class="noWrap">{{ item.Defense.RegenRate + item.Buffs.Regen['Level2'] }} hp/s</div></td>
   <!-- Level 3 -->
-  <td title="'Level 3:&nbsp;'" />
+  <td title="'L3:&nbsp;'" />
   <td title="'Kills'" sortable="'Veteran[\'Level3\'] || -2000000000'">{{ item.Veteran['Level3'] }}</td>
-  <td title="'Health'" sortable="'(Veteran[\'Level3\'] && Defense.Health * (1 + 3 * 0.1)) || -2000000000'"><div ng-if="item.Veteran['Level3']">{{ item.Defense.Health * (1 + 3 * 0.1) | round }} hp</div></td>
-  <td title="'Regeneration'" sortable="'(Defense.RegenRate+Buffs.Regen[\'Level3\']) || -2000000000'"><div ng-if="item.Buffs.Regen['Level3']">{{ item.Defense.RegenRate + item.Buffs.Regen['Level3'] }} hp/s</div></td>
+  <td title="'Health'" sortable="'(Veteran[\'Level3\'] && Defense.Health * (1 + 3 * 0.1)) || -2000000000'"><div ng-if="item.Veteran['Level3']">{{ item.Defense.Health * (1 + 3 * 0.1) | round }}</div></td>
+  <td title="'Regeneration'" sortable="'(Defense.RegenRate+Buffs.Regen[\'Level3\']) || -2000000000'"><div ng-if="item.Buffs.Regen['Level3']" class="noWrap">{{ item.Defense.RegenRate + item.Buffs.Regen['Level3'] }} hp/s</div></td>
   <!-- Level 4 -->
-  <td title="'Level 4:&nbsp;'" />
+  <td title="'L4:&nbsp;'" />
   <td title="'Kills'" sortable="'Veteran[\'Level4\'] || -2000000000'">{{ item.Veteran['Level4'] }}</td>
-  <td title="'Health'" sortable="'(Veteran[\'Level4\'] && Defense.Health * (1 + 4 * 0.1)) || -2000000000'"><div ng-if="item.Veteran['Level4']">{{ item.Defense.Health * (1 + 4 * 0.1) | round }} hp</div></td>
-  <td title="'Regeneration'" sortable="'(Defense.RegenRate+Buffs.Regen[\'Level4\']) || -2000000000'"><div ng-if="item.Buffs.Regen['Level4']">{{ item.Defense.RegenRate + item.Buffs.Regen['Level4'] }} hp/s</div></td>
+  <td title="'Health'" sortable="'(Veteran[\'Level4\'] && Defense.Health * (1 + 4 * 0.1)) || -2000000000'"><div ng-if="item.Veteran['Level4']">{{ item.Defense.Health * (1 + 4 * 0.1) | round }}</div></td>
+  <td title="'Regeneration'" sortable="'(Defense.RegenRate+Buffs.Regen[\'Level4\']) || -2000000000'"><div ng-if="item.Buffs.Regen['Level4']" class="noWrap">{{ item.Defense.RegenRate + item.Buffs.Regen['Level4'] }} hp/s</div></td>
   <!-- Level 5 -->
-  <td title="'Level 5:&nbsp;'" />
+  <td title="'L5:&nbsp;'" />
   <td title="'Kills'" sortable="'Veteran[\'Level5\'] || -2000000000'">{{ item.Veteran['Level5'] }}</td>
-  <td title="'Health'" sortable="'(Veteran[\'Level5\'] && Defense.Health * (1 + 5 * 0.1)) || -2000000000'"><div ng-if="item.Veteran['Level5']">{{ item.Defense.Health * (1 + 5 * 0.1) | round }} hp</div></td>
-  <td title="'Regeneration'" sortable="'(Defense.RegenRate+Buffs.Regen[\'Level5\']) || -2000000000'"><div ng-if="item.Buffs.Regen['Level5']">{{ item.Defense.RegenRate + item.Buffs.Regen['Level5'] }} hp/s</div></td>
+  <td title="'Health'" sortable="'(Veteran[\'Level5\'] && Defense.Health * (1 + 5 * 0.1)) || -2000000000'"><div ng-if="item.Veteran['Level5']">{{ item.Defense.Health * (1 + 5 * 0.1) | round }}</div></td>
+  <td title="'Regeneration'" sortable="'(Defense.RegenRate+Buffs.Regen[\'Level5\']) || -2000000000'"><div ng-if="item.Buffs.Regen['Level5']" class="noWrap">{{ item.Defense.RegenRate + item.Buffs.Regen['Level5'] }} hp/s</div></td>
  </tr>
 </table>
 </script>
@@ -167,30 +177,33 @@
 <script type="text/ng-template" id="cttWeapons">
 <table id="ctWeapons" ng-table-dynamic="weaponTableParams with weaponFeatureColumns" show-group="false" class="compareTable stickyheaders">
  <tr ng-repeat-start="group in $groups">
-  <td colspan="2" class="groupExpandCell">
-    <h3 style="cursor: pointer;" ng-click="weaponGroupsShow[group.value] = !weaponGroupsShow[group.value]; updateStickyHeaders()">{{ group.value }}</h3>
+  <td colspan="4" class="groupExpandCell">
+    <h3 style="cursor: pointer;" ng-click="weaponGroupsShow[group.value] = !weaponGroupsShow[group.value]">{{ group.value }}</h3>
   </td>
  </tr>
  <tr ng-show="!weaponGroupsShow[group.value]" class="{{ o.unit.faction|lowercase }}" ng-repeat="o in group.data" ng-repeat-end>
-  <td ng-if="weaponFeatureColumn.field !== 'WeaponCategory'" ng-repeat="weaponFeatureColumn in $columns" class="wfc{{ weaponFeatureColumn.field }}">
-    <div ng-if="weaponFeatureColumn.firstColumn" class="thumb icon-{{ o.unit.id }}">
-      <span class="strategic icon-{{ o.unit.faction  }}_{{ o.unit.strategicIcon}}" ></span>
+  <td ng-if="col.field !== 'WeaponCategory'" ng-repeat="col in $columns" class="wfc{{ col.field }}">
+    <div ng-if="col.firstColumn" class="sideScrollMe">
+      <div class="strategic icon-{{ o.unit.faction  }}_{{ o.unit.strategicIcon}}" ></div>
     </div>
-    <div class="noWrap" ng-if="weaponFeatureColumn.secondColumn">
-      <h4>{{ o.unit.fullName }}</h4><a href="https://github.com/FAForever/fa/blob/develop/units/{{ o.unit.id }}/{{ o.unit.id }}_unit.bp" target="_blank"><small>{{ o.unit.id }}</small></a>
+    <div ng-if="col.secondColumn" class="sideScrollMe">
+      <a href="https://github.com/FAForever/fa/blob/develop/units/{{ o.unit.id }}/{{ o.unit.id }}_unit.bp" target="_blank">{{ o.unit.id }}</a>
+    </div>
+    <div ng-if="col.thirdColumn" class="sideScrollMe noWrap">
+      <h4>{{ o.unit.fullName }}</h4>
     </div>
     <div>
-      <div class="noWrap" ng-if="weaponFeatureColumn.field === 'DisplayName'" title="{{ o.unit.fullName }}">
+      <div class="sideScrollMe noWrap" ng-if="col.field === 'DisplayName'" title="{{ o.unit.fullName }}">
         <h4>{{ o.weapon.DisplayName }}</h4>
       </div>
-      <div ng-if="weaponFeatureColumn.field === 'dps'">
-        {{ o.weapon[weaponFeatureColumn.field] | round:2 }}
+      <div ng-if="col.field === 'dps'">
+        {{ o.weapon[col.field] | round:2 }}
       </div>
-      <div ng-if="weaponFeatureColumn.field === 'FiringCycle'">
+      <div ng-if="col.field === 'FiringCycle'">
         {{ o.unit.fireCycle(o.weapon) }}
       </div>
-      <div ng-if=" ['tmpSelectionOrder', 'dps','DisplayName','FiringCycle'].indexOf(weaponFeatureColumn.field) === -1 ">
-        {{ o.weapon[weaponFeatureColumn.field] }}
+      <div ng-if=" ['tmpSelectionOrder', 'dps','DisplayName','FiringCycle'].indexOf(col.field) === -1 " class="noWrap">
+        {{ o.weapon[col.field] }}
       </div>
     </div>
   </td>
@@ -200,35 +213,61 @@
 </script>
 
 <script type="text/ng-template" id="cttEnhancements">
+<table id="ctEnhancements" ng-table-dynamic="enhancementTableParams with enhancementFeatureColumns" class="compareTable stickyheaders">
+ <tr class="{{ o.unit.faction|lowercase }}" ng-repeat="o in $data">
+  <td ng-repeat="col in $columns">
+    <div ng-if="col.firstColumn" class="sideScrollMe">
+      <div class="strategic icon-{{ o.unit.faction  }}_{{ o.unit.strategicIcon}}" ></div>
+    </div>
+    <div ng-if="col.secondColumn" class="sideScrollMe">
+      <a href="https://github.com/FAForever/fa/blob/develop/units/{{ o.unit.id }}/{{ o.unit.id }}_unit.bp" target="_blank">{{ o.unit.id }}</a>
+    </div>
+    <div ng-if="col.thirdColumn" class="sideScrollMe noWrap">
+      <h4>{{ o.unit.fullName }}</h4>
+    </div>
+    <div class="sideScrollMe noWrap" ng-if="col.field === 'Name'">
+      <h4>{{ o.unit.Enhancements[o.enhancement]['Name'] }}</h4>
+    </div>
+    <div ng-if=" ['Name'].indexOf(col.field) === -1 ">
+      {{o.unit.Enhancements[o.enhancement][col.field]}}
+    </div>
+  </td>
+ </tr>
+</table>
+</script>
+
+<!--script type="text/ng-template" id="cttEnhancements">
 <table id="ctEnhancements" ng-table-dynamic="enhancementTableParams with enhancementFeatureColumns" show-group="false" class="compareTable stickyheaders">
  <tr ng-repeat-start="group in $groups">
-  <td colspan="2" class="groupExpandCell">
-    <h3 style="cursor: pointer;" ng-click="enhancementGroupsHide[group.value] = !enhancementGroupsHide[group.value]; updateStickyHeaders()">{{ group.value }}</h3>
+  <td colspan="4" class="groupExpandCell">
+    <h3 style="cursor: pointer;" ng-click="enhancementGroupsHide[group.value] = !enhancementGroupsHide[group.value]">{{ group.value }}</h3>
   </td>
  </tr>
  <tr ng-hide="enhancementGroupsHide[group.value]" class="{{ o.unit.faction|lowercase }}" ng-repeat="o in group.data" ng-repeat-end>
-  <td ng-if="enhancementFeatureColumn.field !== 'enhancement'" ng-repeat="enhancementFeatureColumn in $columns" class="wfc{{ enhancementFeatureColumn.field }}">
-    <div ng-if="enhancementFeatureColumn.firstColumn" class="thumb icon-{{ o.unit.id }}">
-      <span class="strategic icon-{{ o.unit.faction  }}_{{ o.unit.strategicIcon}}" ></span>
+  <td ng-if="col.field !== 'enhancement'" ng-repeat="col in $columns" class="wfc{{ col.field }}">
+    <div ng-if="col.firstColumn" class="sideScrollMe">
+      <div class="strategic icon-{{ o.unit.faction  }}_{{ o.unit.strategicIcon}}" ></div>
     </div>
-    <div class="noWrap" ng-if="enhancementFeatureColumn.secondColumn">
-      <h4>{{ o.unit.fullName }}</h4><a href="https://github.com/FAForever/fa/blob/develop/units/{{ o.unit.id }}/{{ o.unit.id }}_unit.bp" target="_blank"><small>{{ o.unit.id }}</small></a>
+    <div ng-if="col.secondColumn" class="sideScrollMe">
+      <a href="https://github.com/FAForever/fa/blob/develop/units/{{ o.unit.id }}/{{ o.unit.id }}_unit.bp" target="_blank">{{ o.unit.id }}</a>
+    </div>
+    <div ng-if="col.thirdColumn" class="sideScrollMe noWrap">
+      <h4>{{ o.unit.fullName }}</h4>
     </div>
     <div>
-      <div class="noWrap" ng-if="enhancementFeatureColumn.field === 'Name'" title="{{ o.unit.fullName }}">
-        <h4>{{ o.unit.Enhancements[o.enhancement][enhancementFeatureColumn.field] }}</h4>
+      <div class="sideScrollMe noWrap" ng-if="col.field === 'Name'" title="{{ o.unit.fullName }}">
+        <h4>{{ o.unit.Enhancements[o.enhancement][col.field] }}</h4>
       </div>
-      <div ng-if="enhancementFeatureColumn.field === 'enhancement'">
+      <div ng-if="col.field === 'enhancement'">
         {{ o.enhancement }}
       </div>
-      <div ng-if=" ['tmpSelectionOrder', 'enhancement', 'Name'].indexOf(enhancementFeatureColumn.field) === -1 ">
-        {{ o.unit.Enhancements[o.enhancement][enhancementFeatureColumn.field] }}
+      <div ng-if=" ['tmpSelectionOrder', 'enhancement', 'Name'].indexOf(col.field) === -1 ">
+        {{ o.unit.Enhancements[o.enhancement][col.field] }}
       </div>
     </div>
   </td>
  </tr>
 </table>
 </div>
-</script>
+</script-->
 
-{{ updateStickyHeaders() }}
