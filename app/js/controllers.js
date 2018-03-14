@@ -340,10 +340,10 @@ unitDb.controllers = {
           if ( item.Weapon ) {
             for ( var weaponIndex in item.Weapon ) {
               var weapon = item.Weapon[weaponIndex];
-              if ( ! weapon.WeaponCategory ) {
-                // TODO FIX Blueprints!
-                weapon.WeaponCategory = "Unknown"
-              }
+//               if ( ! weapon.WeaponCategory ) {
+//                 // TODO FIX Blueprints!
+//                 weapon.WeaponCategory = "Unknown"
+//               }
               var weaponWithUnit = {weapon: weapon, unit:item};
               weaponWithUnit.tmpSelectionOrder=ids.indexOf(item.id);
               weaponWithUnit.id = item.id;
