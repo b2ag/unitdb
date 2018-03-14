@@ -285,11 +285,9 @@ unitDb.controllers = {
         }
 
         var abilities = [];
-//         var weaponCategories = [];
         var weaponFeatures = [];
         var economyFeatures = [];
         var weaponFeatureColumns = [rowHeaderColumns[0],rowHeaderColumns[1],rowHeaderColumns[2], firingCycleColumn];
-        //var weaponFeatureColumns = [rowHeaderColumns[0],rowHeaderColumns[1],rowHeaderColumns[2]];
         var enhancements = [];
         var enhancementsWithUnit = [];
         var enhancementFeatures = [];
@@ -346,14 +344,6 @@ unitDb.controllers = {
                 // TODO FIX Blueprints!
                 weapon.WeaponCategory = "Unknown"
               }
-//               if ( ! weapon.WeaponCategory ) {
-//                 console.warn(weapon);
-//                 continue;
-//               } else {
-//                 if ( weaponCategories.indexOf( weapon.WeaponCategory ) === -1 ) {
-//                   weaponCategories.push( weapon.WeaponCategory );
-//                 }
-//               }
               var weaponWithUnit = {weapon: weapon, unit:item};
               weaponWithUnit.tmpSelectionOrder=ids.indexOf(item.id);
               weaponWithUnit.id = item.id;
@@ -480,7 +470,7 @@ unitDb.controllers = {
             if ( left > 0 ) {
               document.styleSheets[sideScrollStyleIndex].cssRules[0].style.background = 'rgba(34,34,34,1)';
               document.styleSheets[sideScrollStyleIndex].cssRules[1].style.display = 'block';
-              document.styleSheets[sideScrollStyleIndex].cssRules[2].style.opacity = '0';
+              document.styleSheets[sideScrollStyleIndex].cssRules[2].style.opacity = '0.16';
             } else {
               document.styleSheets[sideScrollStyleIndex].cssRules[0].style.background = 'none';
               document.styleSheets[sideScrollStyleIndex].cssRules[1].style.display = 'none';
