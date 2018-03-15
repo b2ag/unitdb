@@ -278,6 +278,12 @@ unitDb.controllers = {
           field: 'FiringCycle',
           title: 'FiringCycle'
         }
+        var dpsTimesWeaponNumberColumn = {
+          field: 'dpsTimesWeaponNumber',
+          title: 'dps*WeaponNumber',
+          sortable: 'weapon.dps * ( weapon.WeaponNumber || 1 )'
+        }
+
         var enhancementKeyColumn = {
           field: 'enhancement',
           title: 'Upgrade',
@@ -287,7 +293,7 @@ unitDb.controllers = {
         var abilities = [];
         var weaponFeatures = [];
         var economyFeatures = [];
-        var weaponFeatureColumns = [rowHeaderColumns[0],rowHeaderColumns[1],rowHeaderColumns[2], firingCycleColumn];
+        var weaponFeatureColumns = [rowHeaderColumns[0],rowHeaderColumns[1],rowHeaderColumns[2], firingCycleColumn,dpsTimesWeaponNumberColumn];
         var enhancements = [];
         var enhancementsWithUnit = [];
         var enhancementFeatures = [];
@@ -378,9 +384,10 @@ unitDb.controllers = {
           'id': 15,
           'fullName': 20,
           'DisplayName': 30,
-          'WeaponNumber': 40,
+          'dpsTimesWeaponNumber': 40,
           'dps': 41,
-          'RateOfFire': 42,
+          'WeaponNumber': 42,
+          'RateOfFire': 49,
           'Damage': 50,
           'DamageRadius': 51,
           'ManualFire': 60,

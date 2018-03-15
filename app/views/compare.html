@@ -1,6 +1,6 @@
 <div id="loadingHint" ng-if="loading" style="opacity:0.5;background:#222;width:100%;height:100%;position:fixed;z-index:1000;display:table"><div style="display:table-cell;text-align:center;vertical-align:middle;font-size:1000%">Loading...</div></div>
 
-<div ng-if="activeUnitDetailUnit" class="unitDetails"><div class="unitDetailsBackground"><unit ng-click="showUnitDetails(false)" content="activeUnitDetailUnit"/></div></div>
+<div ng-if="activeUnitDetailUnit" class="unitDetails"><div class="unitDetailsBackground"><unit content="activeUnitDetailUnit"/></div></div>
 <div class="unitNameDisplayHoverArea"></div><div class="unitNameDisplayHoverAreaNeighbor">
 <h1 class="sideScrollMeAlways" ng-click="toggleShowSection('General')" style="cursor: pointer;">General</h1>
 <ng-include ng-if="!showSection['General']" src="'cttGeneral'"></ng-include>
@@ -204,6 +204,9 @@
       </div>
       <div ng-if="col.field === 'FiringCycle'">
         {{ o.unit.fireCycle(o.weapon) }}
+      </div>
+      <div ng-if="col.field === 'dpsTimesWeaponNumber'">
+        {{ ( o.weapon['dps'] * ( o.weapon['WeaponNumber'] || 1 ) ) | round:2 }}
       </div>
       <div ng-if=" ['tmpSelectionOrder', 'dps','DisplayName','FiringCycle'].indexOf(col.field) === -1 " class="noWrap">
         {{ o.weapon[col.field] }}
