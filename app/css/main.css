@@ -887,3 +887,7 @@ table.compareTable .noWrap, table.compareTable .wfcFiringCycle {
 .compareTable tr:hover {
     cursor: pointer;
 }
+.compareTable tr.uef:hover { background-color: rgba(45,120,178, .4); /*#2d78b2*/ }
+.compareTable tr.cybran:hover { background-color: rgba(223,45,14, .4); /*#df2d0e*/ }
+.compareTable tr.aeon:hover { background-color: rgba(10,157,47, .4); /*#0a9d2f*/ }
+.compareTable tr.seraphim:hover { background-color: rgba(241,194,64, .4); /*#f1c240*/ }
