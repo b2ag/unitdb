@@ -740,8 +740,8 @@ table.compareTable td {
 }
 
 table.compareTable th {
-  font-family: 'Zeroes Three', 'Muli', Verdana, Arial, sans-serif;
-  white-space: nowrap;
+/*   font-family: 'Zeroes Three', 'Muli', Verdana, Arial, sans-serif; */
+/*   white-space: nowrap; */
   background: #222;
 }
 

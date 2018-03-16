@@ -1,7 +1,7 @@
 'use strict';
 unitDb = unitDb || {};
 
-unitDb.advancedEconomyFeaturesAndDescriptionLookup = {'BuildRate': 'Build rate', 'StorageMass': 'Mass storage', 'StorageEnergy': 'Energy storage', 'ProductionPerSecondMass': 'Mass yield', 'ProductionPerSecondEnergy': 'Energy yield', 'MaintenanceConsumptionPerSecondEnergy': 'Energy drain' };
+unitDb.readableEconomyFeatures = {'BuildRate': 'Build rate', 'StorageMass': 'Mass storage', 'StorageEnergy': 'Energy storage', 'ProductionPerSecondMass': 'Mass yield', 'ProductionPerSecondEnergy': 'Energy yield', 'MaintenanceConsumptionPerSecondEnergy': 'Energy drain' };
 
 // decorator to make the unit object a bit more usable
 unitDb.UnitDecorator = function(blueprint) {
@@ -288,12 +288,6 @@ unitDb.UnitDecorator = function(blueprint) {
                 dps: getDps(blueprint.Weapon[i]),
                 isTML: isTML(blueprint.Weapon[i])
             });
-        }
-
-        for (var feature in unitDb.advancedEconomyFeaturesAndDescriptionLookup ) {
-          if ( blueprint.Economy[feature] ) {
-            self.showAdvancedEconomy = true;
-          }
         }
 
         return _.extend(self, blueprint);

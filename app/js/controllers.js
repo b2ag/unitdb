@@ -259,16 +259,17 @@ unitDb.controllers = {
         console.log($scope.contenders);
         var tablesVisibleRowsCounts = [];
 
-        var rowHeaderColumns = [{
-          field: 'tmpSelectionOrder',
-          sortable: 'tmpSelectionOrder',
-          firstColumn: true
-        },{
+        var idColumn = {
           field: 'id',
           title: 'Id',
           sortable: 'id',
           secondColumn: true
-        },{
+        };
+        var rowHeaderColumns = [{
+          field: 'tmpSelectionOrder',
+          sortable: 'tmpSelectionOrder',
+          firstColumn: true
+        },idColumn,{
           field: 'fullName',
           title: 'Unit',
           sortable: 'fullName',
@@ -281,23 +282,39 @@ unitDb.controllers = {
         var dpsTimesWeaponNumberColumn = {
           field: 'dpsTimesWeaponNumber',
           title: 'dps*WeaponNumber',
-          sortable: 'weapon.dps * ( weapon.WeaponNumber || 1 )'
+          sortable: 'weapon.dpsTimesWeaponNumber'
         }
 
-        var enhancementKeyColumn = {
+        var enhancementUpgradeColumn = {
           field: 'enhancement',
           title: 'Upgrade',
+          sortable: 'enhancement',
           groupable: 'enhancement'
+        }
+
+        var factionColumn = {
+          field: 'faction',
+          title: 'Faction',
+          sortable: 'faction',
+          groupable: 'faction'
+        }
+        var factionColumn2d = {
+          field: 'faction',
+          title: 'Fac',
+          sortable: 'unit.faction',
+          groupable: 'unit.faction'
         }
 
         var abilities = [];
         var weaponFeatures = [];
-        var economyFeatures = [];
-        var weaponFeatureColumns = [rowHeaderColumns[0],rowHeaderColumns[1],rowHeaderColumns[2], firingCycleColumn,dpsTimesWeaponNumberColumn];
+        var economyTableAlwaysIgnoredFeatures = ['BuildCostMass','BuildCostEnergy','BuildTime'];
+        var economyTableAlreadyCreatedColumns = [];
+        var economyTableColumns = [rowHeaderColumns[0],factionColumn,rowHeaderColumns[2]];
+        var weaponFeatureColumns = [rowHeaderColumns[0],rowHeaderColumns[1],rowHeaderColumns[2], firingCycleColumn,dpsTimesWeaponNumberColumn,factionColumn2d];
         var enhancements = [];
         var enhancementsWithUnit = [];
         var enhancementFeatures = [];
-        var enhancementFeatureColumns = [rowHeaderColumns[0],rowHeaderColumns[1],rowHeaderColumns[2], enhancementKeyColumn];
+        var enhancementFeatureColumns = [rowHeaderColumns[0],rowHeaderColumns[1],rowHeaderColumns[2], enhancementUpgradeColumn,factionColumn2d];
         var weaponsWitUnit = [];
         var shieldColumns = false;
         for ( var itemIndex in $scope.contenders ) {
@@ -306,6 +323,7 @@ unitDb.controllers = {
             shieldColumns = true;
           }
           if ( item.Display && item.Display.Abilities ) {
+            $scope.needTableAbilities = true;
             for ( var abilityIndex in item.Display.Abilities ) {
               var ability = item.Display.Abilities[abilityIndex];
               if ( abilities.indexOf(ability) === -1 ) {
@@ -313,14 +331,76 @@ unitDb.controllers = {
               }
             }
           }
+
           if ( item.Economy ) {
             for ( var economyFeature in item.Economy ) {
-              if ( economyFeatures.indexOf( economyFeature ) === -1 ) {
-                economyFeatures.push( economyFeature );
+              if ( economyTableAlwaysIgnoredFeatures.indexOf( economyFeature ) !== -1 ) {
+                  continue;
+              }
+              item.showInTableEconomy = true;
+              if ( economyTableAlreadyCreatedColumns.indexOf( economyFeature ) === -1 ) {
+                var titleString = economyFeature;
+                if ( economyFeature in unitDb.readableEconomyFeatures ) {
+                    titleString = unitDb.readableEconomyFeatures[economyFeature];
+                }
+                economyTableColumns.push({
+                    field: economyFeature,
+                    title: titleString,
+                    sortable: 'Economy.'+economyFeature+' || -2000000000'
+                });
+                economyTableAlreadyCreatedColumns.push( economyFeature );
+                $scope.needTableEconomy = true;
+              }
+            }
+          }
+          if ( item.Physics ) {
+            $scope.needTablePhysics = true;
+          }
+          if ( item.Air ) {
+            $scope.needTableAirPhysics = true;
+          }
+          if ( item.Wreckage ) {
+            $scope.needTableWreckage = true;
+          }
+          if ( item.Weapon ) {
+            $scope.needTableWeapons = true;
+            for ( var weaponIndex in item.Weapon ) {
+              var weapon = item.Weapon[weaponIndex];
+              var weaponWithUnit = {weapon: weapon, unit:item};
+              weaponWithUnit.tmpSelectionOrder=ids.indexOf(item.id);
+              weaponWithUnit.id = item.id;
+              weaponWithUnit.fullName=item.fullName;
+              weaponsWitUnit.push(weaponWithUnit);
+              for ( var weaponFeature in weapon ) {
+                var foundCurrentWeaponFeature = false;
+                for ( var searchWeaponFeatureIndex in weaponFeatureColumns ) {
+                  if ( weaponFeature === weaponFeatureColumns[searchWeaponFeatureIndex].field ) foundCurrentWeaponFeature = true;
+                }
+                if ( foundCurrentWeaponFeature ) continue;
+                var featureTitle = weaponFeature;
+                if ( weaponFeature === 'DisplayName' ) {
+                  featureTitle = 'Weapon';
+                }
+                var weaponFeatureColumn = {
+                  field: weaponFeature,
+                  title: featureTitle,
+                  sortable: 'weapon.'+weaponFeature+' || -2000000000'
+                };
+                weaponFeatureColumns.push( weaponFeatureColumn );
+              }
+              if ( weapon.dps ) {
+                if ( weapon.WeaponNumber ) {
+                  weapon.dpsTimesWeaponNumber = weapon.WeaponNumber * weapon.dps
+                } else {
+                  weapon.dpsTimesWeaponNumber = weapon.dps
+                }
+              } else {
+                weapon.dpsTimesWeaponNumber = 0
               }
             }
           }
           if ( item.Enhancements ) {
+            $scope.needTableEnhancements = true;
             for ( var enhancement in item.Enhancements ) {
               if ( enhancements.indexOf( enhancement ) === -1 ) {
                 enhancements.push( enhancement );
@@ -343,45 +423,11 @@ unitDb.controllers = {
               }
             }
           }
-          if ( item.Weapon ) {
-            for ( var weaponIndex in item.Weapon ) {
-              var weapon = item.Weapon[weaponIndex];
-//               if ( ! weapon.WeaponCategory ) {
-//                 // TODO FIX Blueprints!
-//                 weapon.WeaponCategory = "Unknown"
-//               }
-              var weaponWithUnit = {weapon: weapon, unit:item};
-              weaponWithUnit.tmpSelectionOrder=ids.indexOf(item.id);
-              weaponWithUnit.id = item.id;
-              weaponWithUnit.fullName=item.fullName;
-              weaponsWitUnit.push(weaponWithUnit);
-              for ( var weaponFeature in weapon ) {
-                var foundCurrentWeaponFeature = false;
-                for ( var searchWeaponFeatureIndex in weaponFeatureColumns ) {
-                  if ( weaponFeature === weaponFeatureColumns[searchWeaponFeatureIndex].field ) foundCurrentWeaponFeature = true;
-                }
-                if ( foundCurrentWeaponFeature ) continue;
-                var featureTitle = weaponFeature;
-                if ( weaponFeature === 'DisplayName' ) {
-                  featureTitle = 'Weapon';
-                }
-                var weaponFeatureColumn = {
-                  field: weaponFeature,
-                  title: featureTitle,
-                  sortable: 'weapon.'+weaponFeature+' || -2000000000'
-                };
-//                 if ( weaponFeature === 'WeaponCategory' ) {
-//                   weaponFeatureColumn.groupable = 'weapon.'+weaponFeature;
-//                 }
-                weaponFeatureColumns.push( weaponFeatureColumn );
-              }
-            }
-          }
         }
         console.log(weaponFeatureColumns);
         var weaponFeatureSortMap = {
           'tmpSelectionOrder': 10,
-          'id': 15,
+          'faction': 11,
           'fullName': 20,
           'DisplayName': 30,
           'dpsTimesWeaponNumber': 40,
@@ -416,37 +462,32 @@ unitDb.controllers = {
           'RackBones': 140,
           'RackSalvoChargeTime': 141,
           'RackSalvoReloadTime': 142,
-          'RackFireTogether': 143
+          'RackFireTogether': 143,
+          'id': 10000,
         };
         var weaponFeatureColumnsSort = function(x) { return weaponFeatureSortMap[x.field] || 9999; };
         var enhancementColumnsSortMap = {
           'tmpSelectionOrder': 10,
-          'id': 15,
+          'faction': 11,
           'fullName': 20,
           'Name': 30,
-          'Slot': 40,
+          'enhancement': 40,
+          'Slot': 50,
+          'id': 10000,
         };
         var enhancementColumnsSort = function(x) { return enhancementColumnsSortMap[x.field] || 9999; };
 
         $scope.abilities = abilities.sort();
         $scope.unitDb = unitDb;
 
-        console.log(economyFeatures);
         console.log(enhancements);
         console.log(enhancementFeatures);
 
-        var economyColumns = [rowHeaderColumns[0],rowHeaderColumns[1],rowHeaderColumns[2]];
-        for ( var k in unitDb.advancedEconomyFeaturesAndDescriptionLookup ) {
-          var titleString = unitDb.advancedEconomyFeaturesAndDescriptionLookup[k];
-          economyColumns.push({
-            field: k,
-            title: titleString,
-            sortable: 'Economy.'+k+' || -2000000000'
-          });
-        }
-        $scope.economyColumns = economyColumns;
+        // TODO move me
+        economyTableColumns.push(idColumn);
+        $scope.economyTableColumns = economyTableColumns;
 
-        var abilityColumns = [rowHeaderColumns[0],rowHeaderColumns[1],rowHeaderColumns[2]];
+        var abilityColumns = [rowHeaderColumns[0],factionColumn,rowHeaderColumns[2]];
         for ( var abilityIndex in abilities ) {
           var abilityString = abilities[abilityIndex];
           abilityColumns.push({
@@ -456,6 +497,7 @@ unitDb.controllers = {
             normalColumn: true
           });
         }
+        abilityColumns.push(idColumn);
         $scope.abilityColumns = abilityColumns;
 
         $scope.weaponFeatureColumns = _.sortBy(weaponFeatureColumns,weaponFeatureColumnsSort);
@@ -478,11 +520,11 @@ unitDb.controllers = {
             if ( left > 0 ) {
               document.styleSheets[sideScrollStyleIndex].cssRules[0].style.background = 'rgba(34,34,34,1)';
               document.styleSheets[sideScrollStyleIndex].cssRules[1].style.width = '32px';
-              document.styleSheets[sideScrollStyleIndex].cssRules[2].style.opacity = '0.16';
+//               document.styleSheets[sideScrollStyleIndex].cssRules[2].style.opacity = '0.16';
             } else {
               document.styleSheets[sideScrollStyleIndex].cssRules[0].style.background = 'none';
               document.styleSheets[sideScrollStyleIndex].cssRules[1].style.width = '1px';
-              document.styleSheets[sideScrollStyleIndex].cssRules[2].style.opacity = '1';
+//               document.styleSheets[sideScrollStyleIndex].cssRules[2].style.opacity = '1';
             }
             document.styleSheets[sideScrollStyleIndex].cssRules[0].style.left = left+'px';
           }
@@ -501,9 +543,9 @@ unitDb.controllers = {
             var sideScrollStyle = document.createElement("style");
             sideScrollStyle.appendChild(document.createTextNode(""));
             document.head.appendChild(sideScrollStyle);
-            document.styleSheets[sideScrollStyleIndex].insertRule( "tr:hover .sideScrollMe, .sideScrollMeAlways, thead:hover + tbody .sideScrollMe, .unitNameDisplayHoverArea:hover + div.unitNameDisplayHoverAreaNeighbor .sideScrollMe { position: relative; left: 0; background: none; opacity: 1; transition:opacity 250ms ease-out;}", 0 );
-            document.styleSheets[sideScrollStyleIndex].insertRule( ".unitNameDisplayHoverArea { position: fixed; top: 0px; bottom: 0px; left: 0px; width: 1px; height: 100%; z-index: 20;}", 1 );
-            document.styleSheets[sideScrollStyleIndex].insertRule( "tr:hover .sideScrollMe:hover { opacity: 1; transition:opacity 250ms ease-out;}", 2 );
+            document.styleSheets[sideScrollStyleIndex].insertRule( ".sideScrollMeAlways, thead:hover + tbody .sideScrollMe, .unitNameDisplayHoverArea:hover + .unitNameDisplayHoverAreaNeighbor .sideScrollMe { position: relative; left: 0; background: none; opacity: 1; transition:opacity 250ms ease-out;}", 0 );
+            document.styleSheets[sideScrollStyleIndex].insertRule( ".unitNameDisplayHoverArea.leftSide { position: fixed; top: 0px; bottom: 0px; left: 0px; width: 1px; height: 100%; z-index: 20;}", 1 );
+//             document.styleSheets[sideScrollStyleIndex].insertRule( "tr:hover .sideScrollMe:hover { opacity: 1; transition:opacity 250ms ease-out;}", 2 );
             console.log(document.styleSheets.length);
           }
         });
