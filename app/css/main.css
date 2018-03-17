@@ -734,6 +734,9 @@ div.gdiItemsContainer {
    margin-right: 7px;
 }
 
+table.compareTable {
+  overflow: hidden;
+}
 table.compareTable td {
   padding: 0.25em;
   text-align: center;

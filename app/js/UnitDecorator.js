@@ -2,6 +2,7 @@
 unitDb = unitDb || {};
 
 unitDb.readableEconomyFeatures = {'BuildRate': 'Build rate', 'StorageMass': 'Mass storage', 'StorageEnergy': 'Energy storage', 'ProductionPerSecondMass': 'Mass yield', 'ProductionPerSecondEnergy': 'Energy yield', 'MaintenanceConsumptionPerSecondEnergy': 'Energy drain' };
+unitDb.readableShieldFeatures = {'ShieldMaxHealth': 'Shield Health', 'ShieldRegenRate': 'Shield Regen', 'ShieldSize': 'Shield Size', 'ShieldRechargeTime': 'Shield Recharge Time' };
 
 // decorator to make the unit object a bit more usable
 unitDb.UnitDecorator = function(blueprint) {
