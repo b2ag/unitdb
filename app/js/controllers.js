@@ -250,80 +250,80 @@ unitDb.controllers = {
     compareCtrl: ['$window', '$scope', '$routeParams', 'NgTableParams', 'ngTableEventsChannel', 'data', function($window, $scope, $routeParams, NgTableParams, ngTableEventsChannel, data) {
         $scope.layoutClass = localStorage.getItem('compareLayout');
 
-        let ids = $routeParams.ids.split(',');
+        var ids = $routeParams.ids.split(',');
         $scope.contenders = _.sortBy(_.filter(data.items, function(x) { return _.contains(ids, x.id); }),
                                     function(x) { x.tmpSelectionOrder=ids.indexOf(x.id); return x.tmpSelectionOrder; });
         if (_.contains(ids, "all")) {
           $scope.contenders = _.filter(data.items, function(x) { x.tmpSelectionOrder=42; return true; });
         }
         console.log($scope.contenders);
-        let tablesVisibleRowsCounts = [];
+        var tablesVisibleRowsCounts = [];
 
-        let startSelectionSortOrderColumn = {
+        var startSelectionSortOrderColumn = {
           field: 'tmpSelectionOrder',
           sortable: 'tmpSelectionOrder',
         }
-        let factionColumn = {
+        var factionColumn = {
           field: 'faction',
           title: 'Faction',
           sortable: 'faction',
           groupable: 'faction'
         }
-        let factionColumn2d = {
+        var factionColumn2d = {
           field: 'faction',
           title: 'Faction',
           sortable: 'unit.faction',
           groupable: 'unit.faction'
         }
-        let unitColumn = {
+        var unitColumn = {
           field: 'fullName',
           title: 'Unit',
           sortable: 'fullName',
         }
-        let firingCycleColumn = {
+        var firingCycleColumn = {
           field: 'FiringCycle',
           title: 'FiringCycle'
         }
-        let dpsTimesWeaponNumberColumn = {
+        var dpsTimesWeaponNumberColumn = {
           field: 'dpsTimesWeaponNumber',
           title: 'dps*WeaponNumber',
           sortable: 'weapon.dpsTimesWeaponNumber'
         }
 
-        let enhancementUpgradeColumn = {
+        var enhancementUpgradeColumn = {
           field: 'enhancement',
           title: 'Upgrade',
           sortable: 'enhancement',
           groupable: 'enhancement'
         }
-        let idColumn = {
+        var idColumn = {
           field: 'id',
           title: 'Id',
           sortable: 'id',
         };
-        let headerColumns = [startSelectionSortOrderColumn,factionColumn,unitColumn,idColumn]
+        var headerColumns = [startSelectionSortOrderColumn,factionColumn,unitColumn,idColumn]
         $scope.shieldTableColumns = []
-        let shieldTableAlreadyCreatedColumns = [];
-        let shieldTableAlwaysIgnoredFeatures = ['ShieldRegenStartTime'];
+        var shieldTableAlreadyCreatedColumns = [];
+        var shieldTableAlwaysIgnoredFeatures = ['ShieldRegenStartTime'];
         $scope.economyTableColumns = [startSelectionSortOrderColumn,factionColumn,unitColumn];
-        let economyTableAlreadyCreatedColumns = [];
-        let economyTableAlwaysIgnoredFeatures = ['BuildCostMass','BuildCostEnergy','BuildTime'];
-        let abilities = [];
-        let weaponFeatureColumns = [startSelectionSortOrderColumn,idColumn,unitColumn, firingCycleColumn,dpsTimesWeaponNumberColumn,factionColumn2d];
-        let enhancements = [];
-        let enhancementsWithUnit = [];
-        let enhancementFeatures = [];
-        let enhancementFeatureColumns = [startSelectionSortOrderColumn,idColumn,unitColumn, enhancementUpgradeColumn,factionColumn2d];
-        let weaponsWitUnit = [];
-        for ( let itemIndex in $scope.contenders ) {
-          let item = $scope.contenders[itemIndex];
+        var economyTableAlreadyCreatedColumns = [];
+        var economyTableAlwaysIgnoredFeatures = ['BuildCostMass','BuildCostEnergy','BuildTime'];
+        var abilities = [];
+        var weaponFeatureColumns = [startSelectionSortOrderColumn,idColumn,unitColumn, firingCycleColumn,dpsTimesWeaponNumberColumn,factionColumn2d];
+        var enhancements = [];
+        var enhancementsWithUnit = [];
+        var enhancementFeatures = [];
+        var enhancementFeatureColumns = [startSelectionSortOrderColumn,idColumn,unitColumn, enhancementUpgradeColumn,factionColumn2d];
+        var weaponsWitUnit = [];
+        for ( var itemIndex in $scope.contenders ) {
+          var item = $scope.contenders[itemIndex];
           if ( item.Defense && item.Defense.Shield ) {
-            for ( let shieldFeature in item.Defense.Shield ) {
+            for ( var shieldFeature in item.Defense.Shield ) {
               if ( shieldTableAlwaysIgnoredFeatures.indexOf( shieldFeature ) !== -1 ) {
                   continue;
               }
               if ( shieldTableAlreadyCreatedColumns.indexOf( shieldFeature ) === -1 ) {
-                let titleString = shieldFeature;
+                var titleString = shieldFeature;
                 if ( shieldFeature in unitDb.readableShieldFeatures ) {
                     titleString = unitDb.readableShieldFeatures[shieldFeature];
                 }
@@ -339,8 +339,8 @@ unitDb.controllers = {
           }
           if ( item.Display && item.Display.Abilities ) {
             $scope.needTableAbilities = true;
-            for ( let abilityIndex in item.Display.Abilities ) {
-              let ability = item.Display.Abilities[abilityIndex];
+            for ( var abilityIndex in item.Display.Abilities ) {
+              var ability = item.Display.Abilities[abilityIndex];
               if ( abilities.indexOf(ability) === -1 ) {
                 abilities.push(ability);
               }
@@ -348,13 +348,13 @@ unitDb.controllers = {
           }
 
           if ( item.Economy ) {
-            for ( let economyFeature in item.Economy ) {
+            for ( var economyFeature in item.Economy ) {
               if ( economyTableAlwaysIgnoredFeatures.indexOf( economyFeature ) !== -1 ) {
                   continue;
               }
               item.showInTableEconomy = true;
               if ( economyTableAlreadyCreatedColumns.indexOf( economyFeature ) === -1 ) {
-                let titleString = economyFeature;
+                var titleString = economyFeature;
                 if ( economyFeature in unitDb.readableEconomyFeatures ) {
                     titleString = unitDb.readableEconomyFeatures[economyFeature];
                 }
@@ -379,24 +379,24 @@ unitDb.controllers = {
           }
           if ( item.Weapon ) {
             $scope.needTableWeapons = true;
-            for ( let weaponIndex in item.Weapon ) {
-              let weapon = item.Weapon[weaponIndex];
-              let weaponWithUnit = {weapon: weapon, unit:item};
+            for ( var weaponIndex in item.Weapon ) {
+              var weapon = item.Weapon[weaponIndex];
+              var weaponWithUnit = {weapon: weapon, unit:item};
               weaponWithUnit.tmpSelectionOrder=ids.indexOf(item.id);
               weaponWithUnit.id = item.id;
               weaponWithUnit.fullName=item.fullName;
               weaponsWitUnit.push(weaponWithUnit);
-              for ( let weaponFeature in weapon ) {
-                let foundCurrentWeaponFeature = false;
-                for ( let searchWeaponFeatureIndex in weaponFeatureColumns ) {
+              for ( var weaponFeature in weapon ) {
+                var foundCurrentWeaponFeature = false;
+                for ( var searchWeaponFeatureIndex in weaponFeatureColumns ) {
                   if ( weaponFeature === weaponFeatureColumns[searchWeaponFeatureIndex].field ) foundCurrentWeaponFeature = true;
                 }
                 if ( foundCurrentWeaponFeature ) continue;
-                let featureTitle = weaponFeature;
+                var featureTitle = weaponFeature;
                 if ( weaponFeature === 'DisplayName' ) {
                   featureTitle = 'Weapon';
                 }
-                let weaponFeatureColumn = {
+                var weaponFeatureColumn = {
                   field: weaponFeature,
                   title: featureTitle,
                   sortable: 'weapon.'+weaponFeature+' || -2000000000'
@@ -416,19 +416,19 @@ unitDb.controllers = {
           }
           if ( item.Enhancements ) {
             $scope.needTableEnhancements = true;
-            for ( let enhancement in item.Enhancements ) {
+            for ( var enhancement in item.Enhancements ) {
               if ( enhancements.indexOf( enhancement ) === -1 ) {
                 enhancements.push( enhancement );
               }
-              let enhancementWithUnit = {enhancement:enhancement,unit:item};
+              var enhancementWithUnit = {enhancement:enhancement,unit:item};
               enhancementWithUnit.tmpSelectionOrder=ids.indexOf(item.id);
               enhancementWithUnit.id = item.id;
               enhancementWithUnit.fullName=item.fullName;
               enhancementsWithUnit.push(enhancementWithUnit);
-              for ( let enhancementFeature in item.Enhancements[enhancement] ) {
+              for ( var enhancementFeature in item.Enhancements[enhancement] ) {
                 if ( enhancementFeatures.indexOf( enhancementFeature ) === -1 ) {
                   enhancementFeatures.push( enhancementFeature );
-                  let enhancementFeatureColumn = {
+                  var enhancementFeatureColumn = {
                     field: enhancementFeature,
                     title: enhancementFeature,
                     sortable: 'unit.Enhancements[enhancement].'+enhancementFeature+' || -2000000000'
@@ -439,7 +439,7 @@ unitDb.controllers = {
             }
           }
         }
-        let shieldTableColumnsSortMap = {
+        var shieldTableColumnsSortMap = {
           'tmpSelectionOrder': 10,
           'faction': 11,
           'fullName': 20,
@@ -449,9 +449,9 @@ unitDb.controllers = {
           'ShieldRechargeTime': 60,
           'id': 131072,
         };
-        let shieldTableColumnsSort = function(x) { return shieldTableColumnsSortMap[x.field] || 65535; };
+        var shieldTableColumnsSort = function(x) { return shieldTableColumnsSortMap[x.field] || 65535; };
         $scope.shieldTableColumns = _.sortBy($scope.shieldTableColumns.concat(headerColumns),shieldTableColumnsSort);
-        let weaponFeatureSortMap = {
+        var weaponFeatureSortMap = {
           'tmpSelectionOrder': 10,
           'faction': 11,
           'fullName': 20,
@@ -491,8 +491,8 @@ unitDb.controllers = {
           'RackFireTogether': 143,
           'id': 131072,
         };
-        let weaponFeatureColumnsSort = function(x) { return weaponFeatureSortMap[x.field] || 65535; };
-        let enhancementColumnsSortMap = {
+        var weaponFeatureColumnsSort = function(x) { return weaponFeatureSortMap[x.field] || 65535; };
+        var enhancementColumnsSortMap = {
           'tmpSelectionOrder': 10,
           'faction': 11,
           'fullName': 20,
@@ -521,7 +521,7 @@ unitDb.controllers = {
           'Icon': 100000,
           'id': 131072,
         };
-        let enhancementColumnsSort = function(x) { return enhancementColumnsSortMap[x.field] || 65535; };
+        var enhancementColumnsSort = function(x) { return enhancementColumnsSortMap[x.field] || 65535; };
         $scope.enhancementFeatureColumns = _.sortBy(enhancementFeatureColumns,enhancementColumnsSort);
 
         $scope.abilities = abilities.sort();
@@ -533,9 +533,9 @@ unitDb.controllers = {
         // TODO move me
         $scope.economyTableColumns.push(idColumn);
 
-        let abilityTableColumns = [startSelectionSortOrderColumn,factionColumn,unitColumn];
-        for ( let abilityIndex in abilities ) {
-          let abilityString = abilities[abilityIndex];
+        var abilityTableColumns = [startSelectionSortOrderColumn,factionColumn,unitColumn];
+        for ( var abilityIndex in abilities ) {
+          var abilityString = abilities[abilityIndex];
           abilityTableColumns.push({
             field: abilityString,
             title: abilityString,
@@ -564,7 +564,7 @@ unitDb.controllers = {
 
         $window.sideScrollStyleIndex = -1;
         $window.sideScrollStuff = function(){
-          let left = (window.pageXOffset || document.body.scrollLeft) - (document.documentElement.clientLeft || 0);
+          var left = (window.pageXOffset || document.body.scrollLeft) - (document.documentElement.clientLeft || 0);
           if ( sideScrollStyleIndex != -1 ) {
             if ( left > 0 ) {
               document.styleSheets[sideScrollStyleIndex].cssRules[0].style.background = 'rgba(34,34,34,1)';
@@ -589,7 +589,7 @@ unitDb.controllers = {
         $scope.$on('$viewContentLoaded', function() {
           if ( sideScrollStyleIndex == -1 ) {
             sideScrollStyleIndex = document.styleSheets.length;
-            let sideScrollStyle = document.createElement("style");
+            var sideScrollStyle = document.createElement("style");
             sideScrollStyle.appendChild(document.createTextNode(""));
             document.head.appendChild(sideScrollStyle);
             document.styleSheets[sideScrollStyleIndex].insertRule( ".sideScrollMeAlways, thead:hover + tbody .sideScrollMe, .unitNameDisplayHoverArea:hover + .unitNameDisplayHoverAreaNeighbor .sideScrollMe { position: relative; left: 0; background: none; opacity: 1; transition:opacity 250ms ease-out;}", 0 );
