@@ -579,9 +579,6 @@ unitDb.controllers = {
           }
         });
         $scope.loading = false;
-        $scope.updateStickyHeaders = function() {
-            $(".stickyheaders th").css({'position': 'sticky', 'top': 0, 'z-index': 1});
-        };
         $scope.finishLoading = function() {
           $window.setTimeout(function(){
             $scope.loading = false;

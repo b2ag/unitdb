@@ -734,9 +734,10 @@ div.gdiItemsContainer {
    margin-right: 7px;
 }
 
-table.compareTable {
-  overflow: hidden;
-}
+/*table.compareTable {
+  overflow-y: hidden;
+}*/
+
 table.compareTable td {
   padding: 0.25em;
   text-align: center;
@@ -890,7 +891,16 @@ table.compareTable .noWrap, table.compareTable .wfcFiringCycle {
 .compareTable tr:hover {
     cursor: pointer;
 }
-.compareTable tr.uef:hover { background-color: rgba(45,120,178, .4); /*#2d78b2*/ }
-.compareTable tr.cybran:hover { background-color: rgba(223,45,14, .4); /*#df2d0e*/ }
-.compareTable tr.aeon:hover { background-color: rgba(10,157,47, .4); /*#0a9d2f*/ }
-.compareTable tr.seraphim:hover { background-color: rgba(241,194,64, .4); /*#f1c240*/ }
+
+.compareTable tr.uef.active, .faction.uef.active { background-color: rgba(45,120,178, .4); }
+.compareTable tr.cybran.active, .faction.cybran.active { background-color: rgba(223,45,14, .4); }
+.compareTable tr.aeon.active, .faction.aeon.active { background-color: rgba(10,157,47, .4); }
+.compareTable tr.seraphim.active, .faction.seraphim.active { background-color: rgba(241,194,64, .4); }
+.compareTable tr.uef:hover { background-color: rgba(45,120,178, .3); }
+.compareTable tr.cybran:hover { background-color: rgba(223,45,14, .3); }
+.compareTable tr.aeon:hover { background-color: rgba(10,157,47, .3); }
+.compareTable tr.seraphim:hover { background-color: rgba(241,194,64, .3); }
+.compareTable tr.uef.active:hover { background-color: rgba(45,120,178, .1); }
+.compareTable tr.cybran.active:hover { background-color: rgba(223,45,14, .1); }
+.compareTable tr.aeon.active:hover { background-color: rgba(10,157,47, .1); }
+.compareTable tr.seraphim.active:hover { background-color: rgba(241,194,64, .1); }
