@@ -50,8 +50,9 @@ Running with Docker (on Linux)
 Prepare
 ```shell
 git clone "https://github.com/spooky/unitdb.git"
-cd unitdb
+cd unitdb/docker
 docker build -t unitdb-server .
+cd ..
 ```
 Starting the server
 ```shell
